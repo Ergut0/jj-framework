@@ -1,0 +1,3 @@
+[submodule "[ox]/cfxlua-require"]
+	path = [ox]/cfxlua-require
+	url = https://github.com/overextended/cfxlua-require

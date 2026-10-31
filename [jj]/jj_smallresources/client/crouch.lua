@@ -1,0 +1,39 @@
+-- local crouched = false
+
+-- RegisterCommand('crouchKey', function()
+--     DisableControlAction(0, 36, true)
+--     if LocalPlayer.state.invOpen then return end
+--     if LocalPlayer.state.freecam then return end
+--     if IsPedRunning(PlayerPedId()) or IsPedSprinting(PlayerPedId()) then return end
+--     if IsPedInVehicle(PlayerPedId(), GetVehiclePedIsIn(PlayerPedId(), false)) then return end
+--     if (not IsPauseMenuActive()) then
+--         lib.requestAnimSet("move_ped_crouched", false)
+--         lib.requestAnimSet("MOVE_M@TOUGH_GUY@", false)
+
+--         if (crouched) then
+--             crouched = false
+--             ResetPedMovementClipset(PlayerPedId())
+--             ResetPedStrafeClipset(PlayerPedId())
+--             SetPedMovementClipset(PlayerPedId(), "MOVE_M@TOUGH_GUY@", 0.5)
+--             if walkModeHas then
+--                 WalkMenuStart(walkModeHas)
+--             else
+--                 ResetPedMovementClipset(PlayerPedId())
+--             end
+--         elseif (not crouched) then
+--             crouched = true
+--             Citizen.CreateThread(function()
+--                 while crouched do
+--                     SetPedMovementClipset(PlayerPedId(), "move_ped_crouched", 0.55)
+--                     SetPedStrafeClipset(PlayerPedId(), "move_ped_crouched_strafing")
+--                     DisablePlayerFiring(PlayerId(), true)
+--                     DisableControlAction(0, 25, true)
+--                     DisableAimCamThisUpdate()
+--                     Citizen.Wait(0)
+--                 end
+--             end)
+--         end
+--     end
+-- end, false)
+
+-- RegisterKeyMapping('crouchKey', 'Agacharse', 'keyboard', 'LCONTROL')

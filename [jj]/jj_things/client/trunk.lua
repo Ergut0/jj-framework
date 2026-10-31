@@ -1,0 +1,290 @@
+local inTrunk = false
+local isKidnapped = false
+local isKidnapping = false
+local cam = nil
+local disabledTrunk = {
+    [`penetrator`] = 'penetrator',
+    [`vacca`] = 'vacca',
+    [`monroe`] = 'monroe',
+    [`turismor`] = 'turismor',
+    [`osiris`] = 'osiris',
+    [`comet`] = 'comet',
+    [`ardent`] = 'ardent',
+    [`jester`] = 'jester',
+    [`nero`] = 'nero',
+    [`nero2`] = 'nero2',
+    [`vagner`] = 'vagner',
+    [`infernus`] = 'infernus',
+    [`zentorno`] = 'zentorno',
+    [`comet2`] = 'comet2',
+    [`comet3`] = 'comet3',
+    [`comet4`] = 'comet4',
+    [`bullet`] = 'bullet',
+}
+
+-- Functions
+
+local function DrawText3Ds(x, y, z, text)
+    SetTextScale(0.35, 0.35)
+    SetTextFont(4)
+    SetTextProportional(1)
+    SetTextColour(255, 255, 255, 215)
+    BeginTextCommandDisplayText('STRING')
+    SetTextCentre(true)
+    AddTextComponentSubstringPlayerName(text)
+    SetDrawOrigin(x, y, z, 0)
+    EndTextCommandDisplayText(0.0, 0.0)
+    local factor = (string.len(text)) / 370
+    DrawRect(0.0, 0.0 + 0.0125, 0.017 + factor, 0.03, 0, 0, 0, 75)
+    ClearDrawOrigin()
+end
+
+local function getNearestVeh()
+    local pos = GetEntityCoords(PlayerPedId())
+    local entityWorld = GetOffsetFromEntityInWorldCoords(PlayerPedId(), 0.0, 20.0, 0.0)
+
+    local rayHandle = CastRayPointToPoint(pos.x, pos.y, pos.z, entityWorld.x, entityWorld.y, entityWorld.z, 10, PlayerPedId(), 0)
+    local _, _, _, _, vehicleHandle = GetRaycastResult(rayHandle)
+    return vehicleHandle
+end
+
+local function TrunkCam(bool)
+    local vehicle = GetEntityAttachedTo(PlayerPedId())
+    local drawPos = GetOffsetFromEntityInWorldCoords(vehicle, 0, -5.5, 0)
+    local vehHeading = GetEntityHeading(vehicle)
+    if bool then
+        RenderScriptCams(false, false, 0, 1, 0)
+        DestroyCam(cam, false)
+        if not DoesCamExist(cam) then
+            cam = CreateCam('DEFAULT_SCRIPTED_CAMERA', true)
+            SetCamActive(cam, true)
+            SetCamCoord(cam, drawPos.x, drawPos.y, drawPos.z + 2)
+            SetCamRot(cam, -2.5, 0.0, vehHeading, 0.0)
+            RenderScriptCams(true, false, 0, true, true)
+        end
+    else
+        RenderScriptCams(false, false, 0, 1, 0)
+        DestroyCam(cam, false)
+        cam = nil
+    end
+end
+
+-- Events
+
+RegisterNetEvent('jj_things:client:setKidnapping', function(bool)
+    isKidnapping = bool
+end)
+
+RegisterNetEvent('jj_things:trunk:client:kidnap', function()
+    local closestPlayer, distance = GetClosestPlayerToMe()
+    if distance ~= -1 and distance < 2 then
+        if isKidnapping then
+            local closestVehicle = getNearestVeh()
+            if closestVehicle ~= 0 then
+                TriggerServerEvent('jj_things:trunk:server:kidnap', GetPlayerServerId(closestPlayer), VehToNet(closestVehicle))
+            end
+        else
+            Notify('No estás secuestrando a nadie', 'error')
+        end
+    end
+end)
+
+RegisterNetEvent('jj_things:trunk:client:kidnapGetIn', function(netId)
+    local ped = PlayerPedId()
+    local closestVehicle = NetToVeh(netId)
+    local vehClass = GetVehicleClass(closestVehicle)
+    local plate = GetPlate(closestVehicle)
+    if Config.TrunkClasses[vehClass].allowed then
+        lib.callback('jj_things:trunk:getBusy', false, function(isBusy)
+            if not disabledTrunk[GetEntityModel(closestVehicle)] then
+                if not inTrunk then
+                    if not isBusy then
+                        if not isKidnapped then
+                            if GetVehicleDoorAngleRatio(closestVehicle, 5) > 0 then
+                                local offset = {
+                                    x = Config.TrunkClasses[vehClass].x,
+                                    y = Config.TrunkClasses[vehClass].y,
+                                    z = Config.TrunkClasses[vehClass].z,
+                                }
+                                RequestAnimDict('fin_ext_p1-7')
+                                while not HasAnimDictLoaded('fin_ext_p1-7') do
+                                    Wait(0)
+                                end
+                                TaskPlayAnim(ped, 'fin_ext_p1-7', 'cs_devin_dual-7', 8.0, 8.0, -1, 1, 999.0, 0, 0, 0)
+                                AttachEntityToEntity(ped, closestVehicle, 0, offset.x, offset.y, offset.z, 0, 0, 40.0, 1, 1, 1, 1, 1, 1)
+                                TriggerServerEvent('jj_things:trunk:server:setBusy', plate, true)
+                                inTrunk = true
+                                Wait(500)
+                                SetVehicleDoorShut(closestVehicle, 5, false)
+                                Notify('Entraste en el maletero', 'success', 4000)
+                                TrunkCam(true)
+                                isKidnapped = true
+                            else
+                                Notify('El maletero está cerrado', 'error', 2500)
+                            end
+                        else
+                            local vehicle = GetEntityAttachedTo(ped)
+                            plate = GetPlate(vehicle)
+                            if GetVehicleDoorAngleRatio(vehicle, 5) > 0 then
+                                local vehCoords = GetOffsetFromEntityInWorldCoords(vehicle, 0, -5.0, 0)
+                                DetachEntity(ped, true, true)
+                                ClearPedTasks(ped)
+                                inTrunk = false
+                                TriggerServerEvent('jj_things:trunk:server:setBusy', plate, false)
+                                SetEntityCoords(ped, vehCoords.x, vehCoords.y, vehCoords.z)
+                                SetEntityCollision(PlayerPedId(), true, true)
+                                TrunkCam(false)
+                            else
+                                Notify('Ya hay alguien en el maletero', 'error', 2500)
+                            end
+                        end
+                    else
+                        Notify('Ya estás dentro de un maletero', 'error', 2500)
+                    end
+                else
+                    Notify('No puedes entrar en este maletero', 'error', 2500)
+                end
+            else
+                Notify('No hay ningún vehículo cerca', 'error', 2500)
+            end
+        end, plate)
+    else
+                    Notify('No puedes entrar en este maletero', 'error', 2500)
+    end
+end)
+
+RegisterCommand('maletero', function()
+    TriggerEvent('jj_things:trunk:client:getIn')
+end, false)
+
+RegisterNetEvent('jj_things:trunk:client:door', function(netId, open, door)
+    local vehicle = NetToVeh(netId)
+    if not vehicle or vehicle == 0 then return end
+    if open then
+        SetVehicleDoorOpen(vehicle, door, false, false)
+    else
+        SetVehicleDoorShut(vehicle, door, false)
+    end
+end)
+
+RegisterNetEvent('jj_things:trunk:client:getIn', function()
+    local ped = PlayerPedId()
+    local closestVehicle = getNearestVeh()
+    if closestVehicle ~= 0 then
+        local vehClass = GetVehicleClass(closestVehicle)
+        local plate = GetPlate(closestVehicle)
+        if Config.TrunkClasses[vehClass].allowed then
+            lib.callback('jj_things:trunk:getBusy', false, function(isBusy)
+                if not disabledTrunk[GetEntityModel(closestVehicle)] then
+                    if not inTrunk then
+                        if not isBusy then
+                            if GetVehicleDoorAngleRatio(closestVehicle, 5) > 0 then
+                                local offset = {
+                                    x = Config.TrunkClasses[vehClass].x,
+                                    y = Config.TrunkClasses[vehClass].y,
+                                    z = Config.TrunkClasses[vehClass].z,
+                                }
+                                RequestAnimDict('fin_ext_p1-7')
+                                while not HasAnimDictLoaded('fin_ext_p1-7') do
+                                    Wait(0)
+                                end
+                                TaskPlayAnim(ped, 'fin_ext_p1-7', 'cs_devin_dual-7', 8.0, 8.0, -1, 1, 999.0, 0, 0, 0)
+                                AttachEntityToEntity(ped, closestVehicle, 0, offset.x, offset.y, offset.z, 0, 0, 40.0, 1, 1, 1, 1, 1, 1)
+                                TriggerServerEvent('jj_things:trunk:server:setBusy', plate, true)
+                                inTrunk = true
+                                Wait(500)
+                                SetVehicleDoorShut(closestVehicle, 5, false)
+                                Notify('Entraste en el maletero', 'success', 4000)
+                                TrunkCam(true)
+                            else
+                                Notify('El maletero está cerrado', 'error', 2500)
+                            end
+                        else
+                            Notify('Ya hay alguien en el maletero', 'error', 2500)
+                        end
+                    else
+                        Notify('Ya estás dentro de un maletero', 'error', 2500)
+                    end
+                else
+                    Notify('No puedes entrar en este maletero', 'error', 2500)
+                end
+            end, plate)
+        else
+            Notify('No puedes entrar en este maletero', 'error', 2500)
+        end
+    else
+        Notify('No hay ningún vehículo cerca', 'error', 2500)
+    end
+end)
+
+-- Threads
+
+CreateThread(function()
+    while true do
+        local sleep = 1000
+        local vehicle = GetEntityAttachedTo(PlayerPedId())
+        local drawPos = GetOffsetFromEntityInWorldCoords(vehicle, 0, -5.5, 0)
+        local vehHeading = GetEntityHeading(vehicle)
+        if cam then
+            sleep = 0
+            SetCamRot(cam, -2.5, 0.0, vehHeading, 0.0)
+            SetCamCoord(cam, drawPos.x, drawPos.y, drawPos.z + 2)
+        end
+        Wait(sleep)
+    end
+end)
+
+CreateThread(function()
+    while true do
+        local sleep = 1000
+        if inTrunk then
+            if not isKidnapped then
+                local ped = PlayerPedId()
+                local vehicle = GetEntityAttachedTo(ped)
+                local drawPos = GetOffsetFromEntityInWorldCoords(vehicle, 0, -2.5, 0)
+                local plate = GetPlate(vehicle)
+                if DoesEntityExist(vehicle) then
+                    sleep = 0
+                    DrawText3Ds(drawPos.x, drawPos.y, drawPos.z + 0.75, "[E] Salir del maletero")
+                    if IsControlJustPressed(0, 38) then
+                        if GetVehicleDoorAngleRatio(vehicle, 5) > 0 then
+                            local vehCoords = GetOffsetFromEntityInWorldCoords(vehicle, 0, -5.0, 0)
+                            DetachEntity(ped, true, true)
+                            ClearPedTasks(ped)
+                            inTrunk = false
+                            TriggerServerEvent('jj_things:trunk:server:setBusy', plate, false)
+                            SetEntityCoords(ped, vehCoords.x, vehCoords.y, vehCoords.z)
+                            SetEntityCollision(ped, true, true)
+                            TrunkCam(false)
+                        else
+                            Notify('El maletero está cerrado', 'error', 2500)
+                        end
+                        Wait(100)
+                    end
+                    if GetVehicleDoorAngleRatio(vehicle, 5) > 0 then
+                        DrawText3Ds(drawPos.x, drawPos.y, drawPos.z + 0.5, "[G] Cerrar maletero")
+                        if IsControlJustPressed(0, 47) then
+                            if not IsVehicleSeatFree(vehicle, -1) then
+                                TriggerServerEvent('jj_things:trunk:server:door', VehToNet(vehicle), false, 5)
+                            else
+                                SetVehicleDoorShut(vehicle, 5, false)
+                            end
+                            Wait(100)
+                        end
+                    else
+                        DrawText3Ds(drawPos.x, drawPos.y, drawPos.z + 0.5, "[G] Abrir maletero")
+                        if IsControlJustPressed(0, 47) then
+                            if not IsVehicleSeatFree(vehicle, -1) then
+                                TriggerServerEvent('jj_things:trunk:server:door', VehToNet(vehicle), true, 5)
+                            else
+                                SetVehicleDoorOpen(vehicle, 5, false, false)
+                            end
+                            Wait(100)
+                        end
+                    end
+                end
+            end
+        end
+        Wait(sleep)
+    end
+end)

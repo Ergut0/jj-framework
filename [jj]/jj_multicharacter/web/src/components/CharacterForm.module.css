@@ -1,0 +1,80 @@
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.container {
+  z-index: 1;
+  background-color: #0009;
+  width: 100%;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  overflow: hidden;
+}
+
+.boxForm {
+  border: 1px solid var(--color-primary);
+  background-color: var(--background-color);
+  z-index: 2;
+  border-radius: 8px;
+  flex-direction: column;
+  width: 460px;
+  animation: 0.8s ease-out fadeIn;
+  display: flex;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  overflow: hidden;
+  transform: translate(-50%, -50%);
+}
+
+.headerBox {
+  border-bottom: 1px solid var(--color-primary);
+  margin: 0 auto;
+  padding-bottom: 8px;
+}
+
+.input :global(.mantine-TextInput-input),
+.input :global(.mantine-DateInput-input),
+.input :global(.mantine-Select-input) {
+  color: #fff !important;
+  background-color: #181818 !important;
+}
+
+.input :global(.mantine-TextInput-input):focus,
+.input :global(.mantine-DateInput-input):focus,
+.input :global(.mantine-Select-input):focus {
+  border-color: var(--color-primary) !important;
+}
+
+.createButton {
+  text-align: center;
+  color: #fffc;
+  cursor: pointer;
+  letter-spacing: 0.8px;
+  background: #181818;
+  border: 1px solid #0000;
+  border-radius: 8px;
+  width: 100%;
+  padding: 0.7vh;
+  font-size: 1.1rem;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.createButton:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.createButton:not(:disabled):hover {
+  color: #fff;
+  border: 1px solid var(--color-primary);
+  background-color: #1c1c1c;
+}

@@ -1,0 +1,11 @@
+# Contiene la clave de licencia: usa server.cfg.example como plantilla
+/server.cfg
+
+# Dependencias (los web/dist sí se suben: FiveM los carga directamente)
+node_modules/
+
+# Pesa más de 100 MB, el límite de GitHub
+/\[jj\]/jj_loadingscreen/web/assets/audio.mp3
+
+# Configuración local
+/.claude/
