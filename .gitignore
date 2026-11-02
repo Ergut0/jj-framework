@@ -7,9 +7,11 @@ node_modules/
 # Pesa más de 100 MB, el límite de GitHub
 /\[jj\]/jj_loadingscreen/web/assets/audio.mp3
 
-# Script de pago con licencia: tampoco se puede publicar. Sus claves van en server/apiKeys.lua
+# Scripts y mapas de pago con licencia: no se pueden publicar. Se suben a la VPS a mano
 /\[phone\]/
 /\[standalone\]/fd_banking/
+/\[standalone\]/pug-robberycreator/
+/\[maps\]/cc_digitalden_stores_01/
 
 # Configuración local
 /.claude/

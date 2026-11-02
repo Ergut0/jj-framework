@@ -6,7 +6,7 @@ $onesync: on
 name: Atlantis RP (JJ Framework)
 version: 1.0.0
 author: Josete & jesus
-description: Servidor completo con JJ Framework, ox_lib, ox_inventory y los recursos de Atlantis RP. Los scripts de pago (lb-phone y fd_banking) no se incluyen y hay que subirlos a mano.
+description: Servidor completo con JJ Framework, ox_lib, ox_inventory y los recursos de Atlantis RP. Los recursos de pago (lb-phone, fd_banking, pug-robberycreator y el mapa cc_digitalden_stores_01) no se incluyen y hay que subirlos a mano.
 
 tasks:
   # Recursos del servidor (el repositorio es el contenido de la carpeta resources)
