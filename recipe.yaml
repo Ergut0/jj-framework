@@ -1,0 +1,64 @@
+# Receta de txAdmin para montar Atlantis RP (JJ Framework) desde GitHub.
+# Solo funciona si el repositorio es público: txAdmin no puede descargar de repositorios privados.
+$engine: 3
+$minFxVersion: 5181
+$onesync: on
+name: Atlantis RP (JJ Framework)
+version: 1.0.0
+author: Josete & jesus
+description: Servidor completo con JJ Framework, ox_lib, ox_inventory y los recursos de Atlantis RP. Los scripts de pago (lb-phone y fd_banking) no se incluyen y hay que subirlos a mano.
+
+tasks:
+  # Recursos del servidor (el repositorio es el contenido de la carpeta resources)
+  - action: download_github
+    src: https://github.com/Ergut0/jj-framework
+    ref: main
+    dest: ./resources
+
+  # Recursos base de FiveM: mapmanager, spawnmanager, sessionmanager, hardcap...
+  - action: download_github
+    src: https://github.com/citizenfx/cfx-server-data
+    subpath: resources
+    dest: ./resources/[cfx-default]
+
+  # server.cfg a partir de la plantilla, con lo que se rellena en el asistente de txAdmin
+  - action: move_path
+    src: ./resources/server.cfg.example
+    dest: ./server.cfg
+  - action: replace_string
+    file: ./server.cfg
+    search: "endpoint_add_tcp \"0.0.0.0:30120\""
+    replace: "{{serverEndpoints}}"
+  - action: replace_string
+    file: ./server.cfg
+    search: "endpoint_add_udp \"0.0.0.0:30120\""
+    replace: ""
+  - action: replace_string
+    file: ./server.cfg
+    search: "sv_maxclients 48"
+    replace: "sv_maxclients {{maxClients}}"
+  - action: replace_string
+    file: ./server.cfg
+    search: "sv_licenseKey \"CAMBIAR\""
+    replace: "sv_licenseKey \"{{svLicense}}\""
+  - action: replace_string
+    file: ./server.cfg
+    search: "set mysql_connection_string \"mysql://root@localhost/jjframework?charset=utf8mb4\""
+    replace: "set mysql_connection_string \"{{dbConnectionString}}\""
+  - action: replace_string
+    file: ./server.cfg
+    search: "add_principal identifier.license:CAMBIAR group.admin"
+    replace: "{{addPrincipalsMaster}}"
+
+  # Base de datos: se importa en la que crea txAdmin, no en una llamada jjframework
+  - action: replace_string
+    file: ./resources/jjframework.sql
+    search: "CREATE DATABASE IF NOT EXISTS `jjframework` DEFAULT CHARACTER SET utf8mb4;"
+    replace: ""
+  - action: replace_string
+    file: ./resources/jjframework.sql
+    search: "USE `jjframework`;"
+    replace: ""
+  - action: connect_database
+  - action: query_database
+    file: ./resources/jjframework.sql
