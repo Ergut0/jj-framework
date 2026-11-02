@@ -92,7 +92,8 @@ shared_scripts {
 
 files {
   "web/dist/index.html",
-  "web/dist/assets/*.js"
+  "web/dist/logo.webp",
+  "web/dist/assets/*"
 }
 
 ui_page "web/dist/index.html"

@@ -1,12 +1,19 @@
 return {
 	General = {
 		name = 'Shop',
-		blip = {
-			id = 59, colour = 69, scale = 0.8
-		}, inventory = {
-			{ name = 'burger', price = 10 },
-			{ name = 'water', price = 10 },
-			{ name = 'cola', price = 10 },
+		hideAll = false, -- Hides all categories from the shop
+		paymentMethods = {
+			cash = true,
+			bank = true,
+			dirty = false,
+			dirtyItem = 'black_money',
+		},
+		inventory = {
+			{ name = 'burger', price = 10, metadata = { category = 'Food' } },
+			{ name = 'water', price = 10, metadata = { category = 'Drinks' } },
+			{ name = 'sprunk', price = 15, metadata = { category = 'Drinks' } },
+			{ name = 'tosti', price = 5, metadata = { category = 'Food' } },
+			
 		}, locations = {
 			vec3(25.7, -1347.3, 29.49),
 			vec3(-3038.71, 585.9, 7.9),
@@ -19,151 +26,506 @@ return {
 			vec3(2557.94, 382.05, 108.62),
 			vec3(373.55, 325.56, 103.56),
 		}, targets = {
-			{ loc = vec3(25.06, -1347.32, 29.5), length = 0.7, width = 0.5, heading = 0.0, minZ = 29.5, maxZ = 29.9, distance = 1.5 },
-			{ loc = vec3(-3039.18, 585.13, 7.91), length = 0.6, width = 0.5, heading = 15.0, minZ = 7.91, maxZ = 8.31, distance = 1.5 },
-			{ loc = vec3(-3242.2, 1000.58, 12.83), length = 0.6, width = 0.6, heading = 175.0, minZ = 12.83, maxZ = 13.23, distance = 1.5 },
-			{ loc = vec3(1728.39, 6414.95, 35.04), length = 0.6, width = 0.6, heading = 65.0, minZ = 35.04, maxZ = 35.44, distance = 1.5 },
-			{ loc = vec3(1698.37, 4923.43, 42.06), length = 0.5, width = 0.5, heading = 235.0, minZ = 42.06, maxZ = 42.46, distance = 1.5 },
-			{ loc = vec3(1960.54, 3740.28, 32.34), length = 0.6, width = 0.5, heading = 120.0, minZ = 32.34, maxZ = 32.74, distance = 1.5 },
-			{ loc = vec3(548.5, 2671.25, 42.16), length = 0.6, width = 0.5, heading = 10.0, minZ = 42.16, maxZ = 42.56, distance = 1.5 },
-			{ loc = vec3(2678.29, 3279.94, 55.24), length = 0.6, width = 0.5, heading = 330.0, minZ = 55.24, maxZ = 55.64, distance = 1.5 },
-			{ loc = vec3(2557.19, 381.4, 108.62), length = 0.6, width = 0.5, heading = 0.0, minZ = 108.62, maxZ = 109.02, distance = 1.5 },
-			{ loc = vec3(373.13, 326.29, 103.57), length = 0.6, width = 0.5, heading = 345.0, minZ = 103.57, maxZ = 103.97, distance = 1.5 },
+			{ ped = 'mp_m_shopkeep_01', loc = vec3(24.47, -1346.62, 28.5), heading = 271.66, distance = 2.5 },
+			{ ped = 'mp_m_shopkeep_01', loc = vec3(-3039.54, 584.38, 6.91), heading = 17.27, distance = 2.5 },
+			{ ped = 'mp_m_shopkeep_01', loc = vec3(-3242.97, 1000.01, 11.83), heading = 357.57, distance = 2.5 },
+			{ ped = 'mp_m_shopkeep_01', loc = vec3(1728.07, 6415.63, 34.04), heading = 242.95, distance = 2.5 },
+			{ ped = 'mp_m_shopkeep_01', loc = vec3(1697.87, 4922.96, 41.06), heading = 324.71, distance = 2.5 },
+			{ ped = 'mp_m_shopkeep_01', loc = vec3(1959.82, 3740.48, 31.34), heading = 301.57, distance = 2.5 },
+			{ ped = 'mp_m_shopkeep_01', loc = vec3(549.13, 2670.85, 41.16), heading = 99.39, distance = 2.5 },
+			{ ped = 'mp_m_shopkeep_01', loc = vec3(2677.47, 3279.76, 54.24), heading = 335.08, distance = 2.5 },
+			{ ped = 'mp_m_shopkeep_01', loc = vec3(2556.66, 380.84, 107.62), heading = 356.67, distance = 2.5 },
+			{ ped = 'mp_m_shopkeep_01', loc = vec3(372.66, 326.98, 102.57), heading = 253.73, distance = 2.5 },
 		}
 	},
 
-	Liquor = {
-		name = 'Liquor Store',
+    farmacia = {
+		name = 'Farmacia',
 		blip = {
-			id = 93, colour = 69, scale = 0.8
+			id = 51, colour = 77, scale = 0.8
 		}, inventory = {
-			{ name = 'water', price = 10 },
-			{ name = 'cola', price = 10 },
-			{ name = 'burger', price = 15 },
+			{ name = 'bandage', price = 15 },
+			{ name = 'analgesicos', price = 15 }
 		}, locations = {
-			vec3(1135.808, -982.281, 46.415),
-			vec3(-1222.915, -906.983, 12.326),
-			vec3(-1487.553, -379.107, 40.163),
-			vec3(-2968.243, 390.910, 15.043),
-			vec3(1166.024, 2708.930, 38.157),
-			vec3(1392.562, 3604.684, 34.980),
-			vec3(-1393.409, -606.624, 30.319)
+			
+			vec3(104.71, 1.40, 66.77),
 		}, targets = {
-			{ loc = vec3(1134.9, -982.34, 46.41), length = 0.5, width = 0.5, heading = 96.0, minZ = 46.4, maxZ = 46.8, distance = 1.5 },
-			{ loc = vec3(-1222.33, -907.82, 12.43), length = 0.6, width = 0.5, heading = 32.7, minZ = 12.3, maxZ = 12.7, distance = 1.5 },
-			{ loc = vec3(-1486.67, -378.46, 40.26), length = 0.6, width = 0.5, heading = 133.77, minZ = 40.1, maxZ = 40.5, distance = 1.5 },
-			{ loc = vec3(-2967.0, 390.9, 15.14), length = 0.7, width = 0.5, heading = 85.23, minZ = 15.0, maxZ = 15.4, distance = 1.5 },
-			{ loc = vec3(1165.95, 2710.20, 38.26), length = 0.6, width = 0.5, heading = 178.84, minZ = 38.1, maxZ = 38.5, distance = 1.5 },
-			{ loc = vec3(1393.0, 3605.95, 35.11), length = 0.6, width = 0.6, heading = 200.0, minZ = 35.0, maxZ = 35.4, distance = 1.5 }
+			{ped = 's_m_m_doctor_01', scenario = 'WORLD_HUMAN_AA_COFFEE',loc = vec3(104.71, 1.40, 66.77), heading = 247.40,},
 		}
 	},
 
-	YouTool = {
-		name = 'YouTool',
+	informatica = {
+		name = 'Tienda Informatica',
 		blip = {
-			id = 402, colour = 69, scale = 0.8
+			id = 606, colour = 77, scale = 0.8
 		}, inventory = {
-			{ name = 'lockpick', price = 10 }
+			{ name = 'phone', price = 100 },
+			{ name = 'tablet_locales', price = 300 },
+			{ name = 'laptop', price = 150 },
+			{ name = 'radio', price = 600 }
 		}, locations = {
-			vec3(2748.0, 3473.0, 55.67),
-			vec3(342.99, -1298.26, 32.51)
+			vec3(-1532.57, -400.79, 34.63),
 		}, targets = {
-			{ loc = vec3(2746.8, 3473.13, 55.67), length = 0.6, width = 3.0, heading = 65.0, minZ = 55.0, maxZ = 56.8, distance = 3.0 }
+			{ped = 's_m_m_highsec_01', scenario = 'WORLD_HUMAN_AA_COFFEE',loc = vec3(-1530.66, -405.63, 34.63), heading = 267.44,},
+			
 		}
 	},
 
-	Ammunation = {
+	juegosdemesa = {
+		name = 'Juegos de Mesa',
+	    inventory = {
+			{ name = 'stg_checkers', price = 250  },
+			{ name = 'stg_chess', price = 250  }
+			
+		}, locations = {
+			vec3(1177.27, 2713.71, 38.17),
+		}, targets = {
+	        
+            {ped = 'a_m_m_prolhost_01', scenario = 'WORLD_HUMAN_AA_COFFEE', loc = vec3(1177.27, 2713.71, 38.17), heading = 182.28},
+		}
+	},
+
+	tiendaderopa = {
+		name = 'Tienda de Ropa',
+	    inventory = {
+			
+			{ name = 'clothing_bag', price = 3000 },
+			{ name = 'skateboard', price = 500 },
+			
+		}, locations = {
+			vec3(1936.63, 3821.81, 32.47),
+		}, targets = {
+	        
+            {ped = 'a_m_m_prolhost_01', scenario = 'WORLD_HUMAN_AA_COFFEE', loc = vec3(75.48, -1394.71, 28.38), heading = 274.24},
+            {ped = 'a_m_m_prolhost_01', scenario = 'WORLD_HUMAN_AA_COFFEE', loc = vec3(425.40, -804.12, 28.49), heading = 94.10},
+            {ped = 'a_m_m_prolhost_01', scenario = 'WORLD_HUMAN_AA_COFFEE', loc = vec3(-1449.79, -239.01, 48.81), heading = 42.01},
+            {ped = 'a_m_m_prolhost_01', scenario = 'WORLD_HUMAN_AA_COFFEE', loc = vec3(-164.53, -301.88, 38.73), heading = 252.85},
+            {ped = 'a_m_m_prolhost_01', scenario = 'WORLD_HUMAN_AA_COFFEE', loc = vec3(-823.85, -1074.57, 10.33), heading = 211.35},
+            {ped = 'a_m_m_prolhost_01', scenario = 'WORLD_HUMAN_AA_COFFEE', loc = vec3(-1193.27, -766.55, 16.32), heading = 216.08},
+            {ped = 'a_m_m_prolhost_01', scenario = 'WORLD_HUMAN_AA_COFFEE', loc = vec3(612.85, 2763.78, 41.09), heading = 275.25},
+            {ped = 'a_m_m_prolhost_01', scenario = 'WORLD_HUMAN_AA_COFFEE', loc = vec3(1194.97, 2710.12, 37.22), heading = 174.97},
+            {ped = 'a_m_m_prolhost_01', scenario = 'WORLD_HUMAN_AA_COFFEE', loc = vec3(-708.36, -152.69, 36.42), heading = 125.94},
+            {ped = 's_f_m_sweatshop_01', scenario = 'WORLD_HUMAN_AA_COFFEE', loc = vec3(126.66, -225.02, 53.56), heading = 73.81}
+		}
+	},
+
+	deporteextremo = {
+		name = 'Tienda de Paracidas',
+		blip = {
+			id = 94, colour = 77, scale = 0.8
+		}, inventory = {
+			{ name = 'parachute', price = 100 },
+		}, locations = {
+			vec3(443.11, 5569.49, 780.19),
+		}, targets = {
+			{ped = 'a_m_y_dhill_01', scenario = 'WORLD_HUMAN_AA_COFFEE',loc = vec3(443.11, 5569.49, 780.19), heading = 300,},
+		}
+
+	},
+
+	ammunation = {
 		name = 'Ammunation',
 		blip = {
-			id = 110, colour = 69, scale = 0.8
+			id = 110, colour = 69, scale = 0.6
 		}, inventory = {
-			{ name = 'ammo-9', price = 5, },
-			{ name = 'WEAPON_KNIFE', price = 200 },
-			{ name = 'WEAPON_BAT', price = 100 },
-			{ name = 'WEAPON_PISTOL', price = 1000, metadata = { registered = true }, license = 'weapon' }
+			
+			{ name = 'metaldetector', price = 350, metadata = { category = 'Utensilios' } },
+			{ name = 'backpack_small', price = 2000, metadata = { category = 'Utensilios' } },
+			{ name = 'advancedlockpick', price = 150, metadata = { category = 'Ferreteria' } },
+			{ name = 'lockpick', price = 100, metadata = { category = 'Ferreteria' } },
+			{ name = 'ropehook', price = 250, metadata = { category = 'Ferreteria' } },
+			{ name = 'WEAPON_BAT', price = 500, metadata = { category = 'Melee Weapons' } },
+			{ name = 'weapon_crowbar', price = 500, metadata = { category = 'Melee Weapons' } },
+			
 		}, locations = {
-			vec3(-662.180, -934.961, 21.829),
-			vec3(810.25, -2157.60, 29.62),
-			vec3(1693.44, 3760.16, 34.71),
-			vec3(-330.24, 6083.88, 31.45),
-			vec3(252.63, -50.00, 69.94),
-			vec3(22.56, -1109.89, 29.80),
-			vec3(2567.69, 294.38, 108.73),
-			vec3(-1117.58, 2698.61, 18.55),
-			vec3(842.44, -1033.42, 28.19)
+			
 		}, targets = {
-			{ loc = vec3(-660.92, -934.10, 21.94), length = 0.6, width = 0.5, heading = 180.0, minZ = 21.8, maxZ = 22.2, distance = 2.0 },
-			{ loc = vec3(808.86, -2158.50, 29.73), length = 0.6, width = 0.5, heading = 360.0, minZ = 29.6, maxZ = 30.0, distance = 2.0 },
-			{ loc = vec3(1693.57, 3761.60, 34.82), length = 0.6, width = 0.5, heading = 227.39, minZ = 34.7, maxZ = 35.1, distance = 2.0 },
-			{ loc = vec3(-330.29, 6085.54, 31.57), length = 0.6, width = 0.5, heading = 225.0, minZ = 31.4, maxZ = 31.8, distance = 2.0 },
-			{ loc = vec3(252.85, -51.62, 70.0), length = 0.6, width = 0.5, heading = 70.0, minZ = 69.9, maxZ = 70.3, distance = 2.0 },
-			{ loc = vec3(23.68, -1106.46, 29.91), length = 0.6, width = 0.5, heading = 160.0, minZ = 29.8, maxZ = 30.2, distance = 2.0 },
-			{ loc = vec3(2566.59, 293.13, 108.85), length = 0.6, width = 0.5, heading = 360.0, minZ = 108.7, maxZ = 109.1, distance = 2.0 },
-			{ loc = vec3(-1117.61, 2700.26, 18.67), length = 0.6, width = 0.5, heading = 221.82, minZ = 18.5, maxZ = 18.9, distance = 2.0 },
-			{ loc = vec3(841.05, -1034.76, 28.31), length = 0.6, width = 0.5, heading = 360.0, minZ = 28.2, maxZ = 28.6, distance = 2.0 }
+		
+			{ ped = 's_m_y_ammucity_01', loc = vec3(-661.96, -933.53, 20.83), heading = 177.05, distance = 2.5 },
+			{ ped = 's_m_y_ammucity_01', loc = vec3(-1304.19, -395.12, 35.7), heading = 75.03, distance = 2.5 },
+			{ ped = 's_m_y_ammucity_01', loc = vec3(253.63, -51.02, 68.94), heading = 65.78, distance = 2.5 },
+			{ ped = 's_m_y_ammucity_01', loc = vec3(841.92, -1035.32, 27.19), heading = 1.56, distance = 2.5 },
+			{ ped = 's_m_y_ammucity_01', loc = vec3(809.68, -2159.13, 28.62), heading = 1.43, distance = 2.5 },
+			{ ped = 's_m_y_ammucity_01', loc = vec3(23.59, -1105.55, 28.8), heading = 162.91, distance = 2.5 },
+			{ ped = 's_m_y_ammucity_01', loc = vec3(-3173.31, 1088.85, 19.84), heading = 244.18, distance = 2.5 },
+			{ ped = 's_m_y_ammucity_01', loc = vec3(1692.67, 3761.38, 33.71), heading = 227.65, distance = 2.5 },
+			{ ped = 's_m_y_ammucity_01', loc = vec3(-331.23, 6085.37, 30.45), heading = 228.02, distance = 2.5 },
 		}
 	},
 
-	PoliceArmoury = {
-		name = 'Police Armoury',
-		groups = shared.police,
-		blip = {
-			id = 110, colour = 84, scale = 0.8
-		}, inventory = {
-			{ name = 'ammo-9', price = 5, },
-			{ name = 'ammo-rifle', price = 5, },
-			{ name = 'WEAPON_FLASHLIGHT', price = 200 },
-			{ name = 'WEAPON_NIGHTSTICK', price = 100 },
-			{ name = 'WEAPON_PISTOL', price = 500, metadata = { registered = true, serial = 'POL' }, license = 'weapon' },
-			{ name = 'WEAPON_CARBINERIFLE', price = 1000, metadata = { registered = true, serial = 'POL' }, license = 'weapon', grade = 3 },
-			{ name = 'WEAPON_STUNGUN', price = 500, metadata = { registered = true, serial = 'POL'} }
-		}, locations = {
-			vec3(451.51, -979.44, 30.68)
-		}, targets = {
-			{ loc = vec3(453.21, -980.03, 30.68), length = 0.5, width = 3.0, heading = 270.0, minZ = 30.5, maxZ = 32.0, distance = 6 }
-		}
-	},
 
-	Medicine = {
-		name = 'Medicine Cabinet',
-		groups = {
-			['ambulance'] = 0
+---	BOOSTING
+
+    boosting = {
+		name = 'Boosting',
+	    groups = {
+			['admin'] = 0,
+			['mafia'] = 0,
+			
 		},
-		blip = {
-			id = 403, colour = 69, scale = 0.8
-		}, inventory = {
-			{ name = 'medikit', price = 26 },
-			{ name = 'bandage', price = 5 }
-		}, locations = {
-			vec3(306.3687, -601.5139, 43.28406)
-		}, targets = {
-
-		}
-	},
-
-	BlackMarketArms = {
-		name = 'Black Market (Arms)',
 		inventory = {
-			{ name = 'WEAPON_DAGGER', price = 5000, metadata = { registered = false	}, currency = 'black_money' },
-			{ name = 'WEAPON_CERAMICPISTOL', price = 50000, metadata = { registered = false }, currency = 'black_money' },
-			{ name = 'at_suppressor_light', price = 50000, currency = 'black_money' },
-			{ name = 'ammo-rifle', price = 1000, currency = 'black_money' },
-			{ name = 'ammo-rifle2', price = 1000, currency = 'black_money' }
+			
+			{ name = 'transponder', price = 0, metadata = { category = 'Utensilios' } },
+			{ name = 'hacking_device', price = 0, metadata = { category = 'Utensilios' } },
+			{ name = 'boosting_spray', price = 0, metadata = { category = 'Utensilios' } },
+			{ name = 'trojan_usb', price = 0, metadata = { category = 'Utensilios' } },
+			{ name = 'veh_plates', price = 0, metadata = { category = 'Utensilios' } },
+			{ name = 'nos_remover', price = 0, metadata = { category = 'Utensilios' } },
+			{ name = 'nos_blue', price = 0, metadata = { category = 'Utensilios' } },
+			{ name = 'nos_turquoise', price = 0, metadata = { category = 'Utensilios' } },
+		
+			
 		}, locations = {
-			vec3(309.09, -913.75, 56.46)
+			
 		}, targets = {
-
+		
+			{ ped = 's_m_y_dealer_01', loc = vec3(-2248.05, 320.45, 155.52), heading = 65, distance = 2.5 },
+            
 		}
 	},
+
+--- MAFIA
+	--- 
+	--- 
+	--- 
+	--- 
+	ArmasMafia = {
+	name = 'Armas Mafia',
+	groups = {
+			['mafia'] = 0,
+			
+		},
+	inventory = {
+ 		{ name = 'armor_plates', price = 0, metadata = { category = 'CHALECOS' } },
+		{ name = 'heavyarmour', price = 0, metadata = { category = 'CHALECOS' } },
+		-- Armas blancas
+		{ name = 'WEAPON_MOLOTOV', price = 0, metadata = { category = 'ARMAS BLANCAS' } },
+		{ name = 'WEAPON_BAT', price = 0, metadata = { category = 'ARMAS BLANCAS' } },
+		{ name = 'WEAPON_BATTLEAXE', price = 0, metadata = { category = 'ARMAS BLANCAS' } },
+		{ name = 'WEAPON_BOTTLE', price = 0, metadata = { category = 'ARMAS BLANCAS' } },
+		{ name = 'WEAPON_CROWBAR', price = 0, metadata = { category = 'ARMAS BLANCAS' } },
+		{ name = 'WEAPON_DAGGER', price = 0, metadata = { category = 'ARMAS BLANCAS' } },
+		{ name = 'WEAPON_HAMMER', price = 0, metadata = { category = 'ARMAS BLANCAS' } },
+		{ name = 'WEAPON_HATCHET', price = 0, metadata = { category = 'ARMAS BLANCAS' } },
+		{ name = 'WEAPON_KNIFE', price = 0, metadata = { category = 'ARMAS BLANCAS' } },
+--		{ name = 'WEAPON_KNUCKLE', price = 0, metadata = { category = 'ARMAS BLANCAS' } },
+		{ name = 'WEAPON_MACHETE', price = 0, metadata = { category = 'ARMAS BLANCAS' } },
+		{ name = 'WEAPON_POOLCUE', price = 0, metadata = { category = 'ARMAS BLANCAS' } },
+		{ name = 'WEAPON_STONE_HATCHET', price = 0, metadata = { category = 'ARMAS BLANCAS' } },
+		{ name = 'WEAPON_SWITCHBLADE', price = 0, metadata = { category = 'ARMAS BLANCAS' } },
+		{ name = 'WEAPON_WRENCH', price = 0, metadata = { category = 'ARMAS BLANCAS' } },
+--		{ name = 'WEAPON_MACHETECB', price = 0, metadata = { category = 'ARMAS BLANCAS' } },
+--		{ name = 'WEAPON_FURYNAILBAT', price = 0, metadata = { category = 'ARMAS BLANCAS' } },
+--		{ name = 'WEAPON_WBAT', price = 0, metadata = { category = 'ARMAS BLANCAS' } },
+--		{ name = 'WEAPON_KATANA', price = 0, metadata = { category = 'ARMAS BLANCAS' } },
+--		{ name = 'WEAPON_CARNICERO', price = 0, metadata = { category = 'ARMAS BLANCAS' } },
+--		{ name = 'WEAPON_SLEDGEHUMMER', price = 0, metadata = { category = 'ARMAS BLANCAS' } },
+
+		-- Pistolas
+		{ name = 'WEAPON_APPISTOL', price = 0, metadata = { registered = false, category = 'PISTOLAS' } },
+		{ name = 'WEAPON_CERAMICPISTOL', price = 0, metadata = { registered = false, category = 'PISTOLAS' } },
+		{ name = 'WEAPON_COMBATPISTOL', price = 0, metadata = { registered = false, category = 'PISTOLAS' } },
+		{ name = 'WEAPON_DOUBLEACTION', price = 0, metadata = { registered = false, category = 'PISTOLAS' } },
+		{ name = 'WEAPON_GADGETPISTOL', price = 0, metadata = { registered = false, category = 'PISTOLAS' } },
+		{ name = 'WEAPON_HEAVYPISTOL', price = 0, metadata = { registered = false, category = 'PISTOLAS' } },
+		{ name = 'WEAPON_MACHINEPISTOL', price = 0, metadata = { registered = false, category = 'PISTOLAS' } },
+		{ name = 'WEAPON_MARKSMANPISTOL', price = 0, metadata = { registered = false, category = 'PISTOLAS' } },
+		{ name = 'WEAPON_NAVYREVOLVER', price = 0, metadata = { registered = false, category = 'PISTOLAS' } },
+		{ name = 'WEAPON_PISTOL', price = 0, metadata = { registered = false, category = 'PISTOLAS' } },
+		{ name = 'WEAPON_PISTOL50', price = 0, metadata = { registered = false, category = 'PISTOLAS' } },
+		{ name = 'WEAPON_PISTOL_MK2', price = 0, metadata = { registered = false, category = 'PISTOLAS' } },
+		{ name = 'WEAPON_PISTOLXM3', price = 0, metadata = { registered = false, category = 'PISTOLAS' } },
+		{ name = 'WEAPON_REVOLVER', price = 0, metadata = { registered = false, category = 'PISTOLAS' } },
+		{ name = 'WEAPON_REVOLVER_MK2', price = 0, metadata = { registered = false, category = 'PISTOLAS' } },
+		{ name = 'WEAPON_SNSPISTOL', price = 0, metadata = { registered = false, category = 'PISTOLAS' } },
+		{ name = 'WEAPON_SNSPISTOL_MK2', price = 0, metadata = { registered = false, category = 'PISTOLAS' } },
+		{ name = 'WEAPON_TECPISTOL', price = 0, metadata = { registered = false, category = 'PISTOLAS' } },
+		{ name = 'WEAPON_VINTAGEPISTOL', price = 0, metadata = { registered = false, category = 'PISTOLAS' } },
+		{ name = 'WEAPON_R587', price = 0, metadata = { registered = false, category = 'PISTOLAS' } },
+--		{ name = 'WEAPON_M1911', price = 0, metadata = { registered = false, category = 'PISTOLAS' } },
+		{ name = 'WEAPON_GLOCK', price = 0, metadata = { registered = false, category = 'PISTOLAS' } },
+
+		-- Subfusiles
+--		{ name = 'WEAPON_ASSAULTSMG', price = 0, metadata = { registered = false, category = 'SUBFUSILES' } },
+--		{ name = 'WEAPON_COMBATPDW', price = 0, metadata = { registered = false, category = 'SUBFUSILES' } },
+		{ name = 'WEAPON_GUSENBERG', price = 0, metadata = { registered = false, category = 'SUBFUSILES' } },
+		{ name = 'WEAPON_MICROSMG', price = 0, metadata = { registered = false, category = 'SUBFUSILES' } },
+--		{ name = 'WEAPON_MINISMG', price = 0, metadata = { registered = false, category = 'SUBFUSILES' } },
+		{ name = 'WEAPON_SMG', price = 0, metadata = { registered = false, category = 'SUBFUSILES' } },
+--		{ name = 'WEAPON_SMG_MK2', price = 0, metadata = { registered = false, category = 'SUBFUSILES' } },
+		{ name = 'WEAPON_PM5', price = 0, metadata = { registered = false, category = 'SUBFUSILES' } },
+
+		-- Escopetas
+--		{ name = 'WEAPON_ASSAULTSHOTGUN', price = 0, metadata = { registered = false, category = 'ESCOPETAS' } },
+--		{ name = 'WEAPON_AUTOSHOTGUN', price = 0, metadata = { registered = false, category = 'ESCOPETAS' } },
+--		{ name = 'WEAPON_BULLPUPSHOTGUN', price = 0, metadata = { registered = false, category = 'ESCOPETAS' } },
+--		{ name = 'WEAPON_COMBATSHOTGUN', price = 0, metadata = { registered = false, category = 'ESCOPETAS' } },
+        { name = 'WEAPON_DBSHOTGUN', price = 0, metadata = { registered = false, category = 'ESCOPETAS' } },
+--		{ name = 'WEAPON_HEAVYSHOTGUN', price = 0, metadata = { registered = false, category = 'ESCOPETAS' } },
+		{ name = 'WEAPON_PUMPSHOTGUN', price = 0, metadata = { registered = false, category = 'ESCOPETAS' } },
+--		{ name = 'WEAPON_PUMPSHOTGUN_MK2', price = 0, metadata = { registered = false, category = 'ESCOPETAS' } },
+		{ name = 'WEAPON_SAWNOFFSHOTGUN', price = 0, metadata = { registered = false, category = 'ESCOPETAS' } },
+
+		-- Fusiles
+--		{ name = 'WEAPON_ADVANCEDRIFLE', price = 0, metadata = { registered = false, category = 'FUSILES' } },
+	    { name = 'WEAPON_ASSAULTRIFLE', price = 0, metadata = { registered = false, category = 'FUSILES' } },
+--		{ name = 'WEAPON_ASSAULTRIFLE_MK2', price = 0, metadata = { registered = false, category = 'FUSILES' } },
+--		{ name = 'WEAPON_BATTLERIFLE', price = 0, metadata = { registered = false, category = 'FUSILES' } },
+--		{ name = 'WEAPON_BULLPUPRIFLE', price = 0, metadata = { registered = false, category = 'FUSILES' } },
+--		{ name = 'WEAPON_BULLPUPRIFLE_MK2', price = 0, metadata = { registered = false, category = 'FUSILES' } },
+--		{ name = 'WEAPON_CARBINERIFLE', price = 0, metadata = { registered = false, category = 'FUSILES' } },
+--		{ name = 'WEAPON_CARBINERIFLE_MK2', price = 0, metadata = { registered = false, category = 'FUSILES' } },
+--		{ name = 'WEAPON_COMPACTRIFLE', price = 0, metadata = { registered = false, category = 'FUSILES' } },
+--		{ name = 'WEAPON_HEAVYRIFLE', price = 0, metadata = { registered = false, category = 'FUSILES' } },
+		{ name = 'WEAPON_MILITARYRIFLE', price = 0, metadata = { registered = false, category = 'FUSILES' } },
+--		{ name = 'WEAPON_SPECIALCARBINE', price = 0, metadata = { registered = false, category = 'FUSILES' } },
+--		{ name = 'WEAPON_SPECIALCARBINE_MK2', price = 0, metadata = { registered = false, category = 'FUSILES' } },
+--		{ name = 'WEAPON_TACTICALRIFLE', price = 0, metadata = { registered = false, category = 'FUSILES' } },
+
+		-- Francotiradores
+--		{ name = 'WEAPON_HEAVYSNIPER', price = 0, metadata = { registered = false, category = 'FRANCOTIRADORES' } },
+--		{ name = 'WEAPON_HEAVYSNIPER_MK2', price = 0, metadata = { registered = false, category = 'FRANCOTIRADORES' } },
+--		{ name = 'WEAPON_MARKSMANRIFLE', price = 0, metadata = { registered = false, category = 'FRANCOTIRADORES' } },
+--		{ name = 'WEAPON_MARKSMANRIFLE_MK2', price = 0, metadata = { registered = false, category = 'FRANCOTIRADORES' } },
+--		{ name = 'WEAPON_PRECISIONRIFLE', price = 0, metadata = { registered = false, category = 'FRANCOTIRADORES' } },
+		{ name = 'WEAPON_SNIPERRIFLE', price = 0, metadata = { registered = false, category = 'FRANCOTIRADORES' } },
+		{ name = 'WEAPON_MUSKET', price = 0, metadata = { registered = false, category = 'FRANCOTIRADORES' } },
+
+		-- Municion
+		{ name = 'ammo-22', price = 0, metadata = { category = 'MUNICION' } },
+		{ name = 'ammo-38', price = 0, metadata = { category = 'MUNICION' } },
+		{ name = 'ammo-44', price = 0, metadata = { category = 'MUNICION' } },
+		{ name = 'ammo-45', price = 0, metadata = { category = 'MUNICION' } },
+		{ name = 'ammo-50', price = 0, metadata = { category = 'MUNICION' } },
+		{ name = 'ammo-9', price = 0, metadata = { category = 'MUNICION' } },
+		{ name = 'ammo-musket', price = 0, metadata = { category = 'MUNICION' } },
+		{ name = 'ammo-rifle', price = 0, metadata = { category = 'MUNICION' } },
+		{ name = 'ammo-rifle2', price = 0, metadata = { category = 'MUNICION' } },
+		{ name = 'ammo-shotgun', price = 0, metadata = { category = 'MUNICION' } },
+		{ name = 'ammo-sniper', price = 0, metadata = { category = 'MUNICION' } },
+		{ name = 'ammo-heavysniper', price = 0, metadata = { category = 'MUNICION' } },
+
+		-- Accesorios
+		{ name = 'at_barrel', price = 0, metadata = { category = 'ACCESORIOS' } },
+		{ name = 'at_clip_extended_pistol', price = 0, metadata = { category = 'ACCESORIOS' } },
+		{ name = 'at_flashlight', price = 0, metadata = { category = 'ACCESORIOS' } },
+		{ name = 'at_grip', price = 0, metadata = { category = 'ACCESORIOS' } },
+		{ name = 'at_muzzle_bell', price = 0, metadata = { category = 'ACCESORIOS' } },
+		{ name = 'at_muzzle_fat', price = 0, metadata = { category = 'ACCESORIOS' } },
+		{ name = 'at_muzzle_flat', price = 0, metadata = { category = 'ACCESORIOS' } },
+		{ name = 'at_muzzle_heavy', price = 0, metadata = { category = 'ACCESORIOS' } },
+		{ name = 'at_muzzle_precision', price = 0, metadata = { category = 'ACCESORIOS' } },
+		{ name = 'at_muzzle_slanted', price = 0, metadata = { category = 'ACCESORIOS' } },
+		{ name = 'at_muzzle_split', price = 0, metadata = { category = 'ACCESORIOS' } },
+		{ name = 'at_muzzle_squared', price = 0, metadata = { category = 'ACCESORIOS' } },
+		{ name = 'at_muzzle_tactical', price = 0, metadata = { category = 'ACCESORIOS' } },
+		{ name = 'at_scope_advanced', price = 0, metadata = { category = 'ACCESORIOS' } },
+		{ name = 'at_scope_holo', price = 0, metadata = { category = 'ACCESORIOS' } },
+		{ name = 'at_scope_large', price = 0, metadata = { category = 'ACCESORIOS' } },
+		{ name = 'at_scope_medium', price = 0, metadata = { category = 'ACCESORIOS' } },
+		{ name = 'at_scope_nv', price = 0, metadata = { category = 'ACCESORIOS' } },
+		{ name = 'at_scope_small', price = 0, metadata = { category = 'ACCESORIOS' } },
+		{ name = 'at_scope_thermal', price = 0, metadata = { category = 'ACCESORIOS' } },
+		{ name = 'at_suppressor_light', price = 0, metadata = { category = 'ACCESORIOS' } },
+		{ name = 'at_suppressor_heavy', price = 0, metadata = { category = 'ACCESORIOS' } }
+	},
+	locations = {
+		vec3(-2821.44, 1427.90, 86.97), --321.85, 298.23, 89.03 
+	},
+	targets = {
+		{ped = 's_m_y_dealer_01', scenario = 'WORLD_HUMAN_AA_COFFEE',loc = vec3(-319.40, -1306.41, 30.26), heading = 4.13,}, -- -319.40, -1306.41, 31.26, 4.13
+		
+	}
+  },
+
+MafiaUtensilios = {
+	name = 'Mafia Utensilios',
+	groups = {
+			['mafia'] = 0,
+
+		},
+	inventory = {
+		{ name = 'drill', price = 0, metadata = { category = 'ROBO' } },
+		{ name = 'cortadordecristal', price = 0, metadata = { category = 'ROBO' } },
+		{ name = 'screwdriverset', price = 0, metadata = { category = 'ROBO' } },
+		{ name = 'hackingdevice', price = 0, metadata = { category = 'HACKEO' } },
+		{ name = 'inhibidormovil', price = 0, metadata = { category = 'HACKEO' } },
+		{ name = 'trojan_usb', price = 0, metadata = { category = 'HACKEO' } },
+		{ name = 'electronickit', price = 0, metadata = { category = 'HACKEO' } },
+		{ name = 'hacking_device', price = 0, metadata = { category = 'HACKEO' } },
+		{ name = 'usbhackeo', price = 0, metadata = { category = 'HACKEO' } },
+		{ name = 'transponder', price = 0, metadata = { category = 'HACKEO' } },
+		{ name = 'laptop', price = 0, metadata = { category = 'HACKEO' } },
+		{ name = 'lanzatermica', price = 0, metadata = { category = 'HERRAMIENTAS' } },
+		{ name = 'sierragrande', price = 0, metadata = { category = 'HERRAMIENTAS' } },
+		{ name = 'thermite', price = 0, metadata = { category = 'HERRAMIENTAS' } },
+		{ name = 'sopleteportatil', price = 0, metadata = { category = 'HERRAMIENTAS' } },
+		{ name = 'radial', price = 0, metadata = { category = 'HERRAMIENTAS' } },
+		{ name = 'tarjetadeseguridad', price = 0, metadata = { category = 'ACCESOS' } },
+		{ name = 'tarjetadeseguridad2', price = 0, metadata = { category = 'ACCESOS' } },
+		{ name = 'tarjetadeseguridad3', price = 0, metadata = { category = 'ACCESOS' } },
+		{ name = 'idfalso', price = 0, metadata = { category = 'DOCUMENTACION' } },
+		{ name = 'pasaportefalso', price = 0, metadata = { category = 'DOCUMENTACION' } },
+		{ name = 'spray', price = 0, metadata = { category = 'VARIOS' } },
+		{ name = 'spray_remover', price = 0, metadata = { category = 'VARIOS' } },
+		{ name = 'backpack_large', price = 0, metadata = { category = 'VARIOS' } },
+		{ name = 'radio', price = 0, metadata = { category = 'VARIOS' } }
+	},
+	locations = {
+		vec3(-1803.56, 486.23, 108.49)
+	},
+	targets = {
+		{
+			loc = vec3(-1803.56, 486.23, 107.49),
+			heading =  161.37,
+			ped = 'a_m_y_soucent_03',
+			scenario = 'WORLD_HUMAN_GUARD_STAND'
+		},
+		{ped = 's_m_o_busker_01', scenario = 'WORLD_HUMAN_AA_COFFEE',loc = vec3(-307.18, -1307.41, 30.26), heading = 6.14,}, -- -307.18, -1307.41, 31.26, 6.14 OBJETOS ROBOS
+
+		
+	}
+},
+
+MafiaDrogas = {
+	name = 'Mafia Drogas',
+	groups = {
+			['mafia'] = 0,
+		},
+	inventory = {
+		-- Cultivo marihuana
+		{ name = 'weed_seed', price = 0, metadata = { category = 'BASICO MARIHUANA' } },
+		{ name = 'plant_pot', price = 0, metadata = { category = 'BASICO MARIHUANA' } },
+		{ name = 'fertilizer', price = 0, metadata = { category = 'CULTIVO MARIHUANA' } },
+		{ name = 'default_lamp', price = 0, metadata = { category = 'LABORATORIO MARIHUANA' } },
+		{ name = 'default_fan', price = 0, metadata = { category = 'LABORATORIO MARIHUANA' } },
+		{ name = 'default_soil', price = 0, metadata = { category = 'BASICO MARIHUANA' } },
+		{ name = 'watering_can', price = 0, metadata = { category = 'BASICO MARIHUANA' } },
+		{ name = 'plant_trimmers', price = 0, metadata = { category = 'BASICO MARIHUANA' } },
+
+		-- Marihuana procesado
+		{ name = 'weed', price = 0, metadata = { category = 'MARIHUANA PROCESADO' } },
+		{ name = 'high_quality_weed', price = 0, metadata = { category = 'MARIHUANA PROCESADO' } },
+		{ name = 'dried_weed', price = 0, metadata = { category = 'MARIHUANA PROCESADO' } },
+		{ name = 'dried_high_quality_weed', price = 0, metadata = { category = 'MARIHUANA PROCESADO' } },
+		{ name = 'gingeritis_weed', price = 0, metadata = { category = 'MARIHUANA PROCESADO' } },
+		{ name = 'energizing_dried_weed', price = 0, metadata = { category = 'MARIHUANA PROCESADO' } },
+
+		-- Marihuana empaquetado
+		{ name = 'baggy', price = 0, metadata = { category = 'EMPAQUETADO' } },
+		{ name = 'drying_rack', price = 0, metadata = { category = 'EMPAQUETADO' } },
+		{ name = 'default_brick_press', price = 0, metadata = { category = 'EMPAQUETADO' } },
+		{ name = 'packaging_station', price = 0, metadata = { category = 'EMPAQUETADO' } },
+
+		-- Marihuana final
+		{ name = 'packaged_weed', price = 0, metadata = { category = 'PRODUCTO FINAL MARIHUANA' } },
+		{ name = 'packaged_high_quality_weed', price = 0, metadata = { category = 'PRODUCTO FINAL MARIHUANA' } },
+		{ name = 'packaged_dried_weed', price = 0, metadata = { category = 'PRODUCTO FINAL MARIHUANA' } },
+		{ name = 'packaged_dried_high_quality_weed', price = 0, metadata = { category = 'PRODUCTO FINAL MARIHUANA' } },
+		{ name = 'packaged_gingeritis_weed', price = 0, metadata = { category = 'PRODUCTO FINAL MARIHUANA' } },
+		{ name = 'packaged_energizing_dried_weed', price = 0, metadata = { category = 'PRODUCTO FINAL MARIHUANA' } },
+		{ name = 'weed_brick', price = 0, metadata = { category = 'PRODUCTO FINAL MARIHUANA' } },
+		{ name = 'high_quality_weed_brick', price = 0, metadata = { category = 'PRODUCTO FINAL MARIHUANA' } },
+
+		-- Cultivo coca
+		{ name = 'coke_seed', price = 0, metadata = { category = 'CULTIVO COCAINA' } },
+
+		-- Cocaina procesado
+		{ name = 'coke_leaf', price = 0, metadata = { category = 'COCAINA PROCESADO' } },
+		{ name = 'high_quality_coke_leaf', price = 0, metadata = { category = 'COCAINA PROCESADO' } },
+		{ name = 'dried_coke_leaf', price = 0, metadata = { category = 'COCAINA PROCESADO' } },
+		{ name = 'dried_high_quality_coke_leaf', price = 0, metadata = { category = 'COCAINA PROCESADO' } },
+		{ name = 'coke', price = 0, metadata = { category = 'COCAINA PROCESADO' } },
+		{ name = 'high_quality_coke', price = 0, metadata = { category = 'COCAINA PROCESADO' } },
+		{ name = 'dried_coke', price = 0, metadata = { category = 'COCAINA PROCESADO' } },
+		{ name = 'dried_high_quality_coke', price = 0, metadata = { category = 'COCAINA PROCESADO' } },
+		{ name = 'cooked_coke', price = 0, metadata = { category = 'COCAINA PROCESADO' } },
+		{ name = 'cooked_high_quality_coke', price = 0, metadata = { category = 'COCAINA PROCESADO' } },
+		{ name = 'cooked_dried_coke', price = 0, metadata = { category = 'COCAINA PROCESADO' } },
+		{ name = 'cooked_dried_high_quality_coke', price = 0, metadata = { category = 'COCAINA PROCESADO' } },
+
+		-- Cocaina final
+		{ name = 'packaged_coke', price = 0, metadata = { category = 'PRODUCTO FINAL COCAINA' } },
+		{ name = 'packaged_high_quality_coke', price = 0, metadata = { category = 'PRODUCTO FINAL COCAINA' } },
+		{ name = 'packaged_dried_coke', price = 0, metadata = { category = 'PRODUCTO FINAL COCAINA' } },
+		{ name = 'packaged_dried_high_quality_coke', price = 0, metadata = { category = 'PRODUCTO FINAL COCAINA' } },
+		{ name = 'packaged_cooked_coke', price = 0, metadata = { category = 'PRODUCTO FINAL COCAINA' } },
+		{ name = 'packaged_cooked_high_quality_coke', price = 0, metadata = { category = 'PRODUCTO FINAL COCAINA' } },
+		{ name = 'packaged_cooked_dried_coke', price = 0, metadata = { category = 'PRODUCTO FINAL COCAINA' } },
+		{ name = 'packaged_cooked_dried_high_quality_coke', price = 0, metadata = { category = 'PRODUCTO FINAL COCAINA' } },
+		{ name = 'coke_brick', price = 0, metadata = { category = 'PRODUCTO FINAL COCAINA' } },
+		{ name = 'high_quality_coke_brick', price = 0, metadata = { category = 'PRODUCTO FINAL COCAINA' } },
+		{ name = 'cooked_coke_brick', price = 0, metadata = { category = 'PRODUCTO FINAL COCAINA' } },
+		{ name = 'cooked_high_quality_coke_brick', price = 0, metadata = { category = 'PRODUCTO FINAL COCAINA' } },
+
+		-- Meta laboratorio
+		{ name = 'drug_mixer', price = 0, metadata = { category = 'LABORATORIO META' } },
+		{ name = 'drug_cauldron', price = 0, metadata = { category = 'LABORATORIO META' } },
+		{ name = 'drug_oven', price = 0, metadata = { category = 'LABORATORIO META' } },
+		{ name = 'chemistry_station', price = 0, metadata = { category = 'LABORATORIO META' } },
+		{ name = 'acetone', price = 0, metadata = { category = 'LABORATORIO META' } },
+		{ name = 'ecola', price = 0, metadata = { category = 'LABORATORIO META' } },
+		{ name = 'pills', price = 0, metadata = { category = 'LABORATORIO META' } },
+		{ name = 'phosphorus', price = 0, metadata = { category = 'LABORATORIO META' } },
+		{ name = 'gasoline', price = 0, metadata = { category = 'LABORATORIO META' } },
+		{ name = 'banana', price = 0, metadata = { category = 'LABORATORIO META' } },
+		{ name = 'hammer', price = 0, metadata = { category = 'LABORATORIO META' } },
+
+		-- Meta procesado
+		{ name = 'liquid_meth', price = 0, metadata = { category = 'META PROCESADO' } },
+		{ name = 'default_meth', price = 0, metadata = { category = 'META PROCESADO' } },
+
+		-- Meta final
+		{ name = 'packaged_default_meth', price = 0, metadata = { category = 'PRODUCTO FINAL META' } }
+	},
+	locations = {
+		vec3(-1793.83, 464.31, 108.49)
+	},
+	targets = {
+		{
+			loc = vec3(-1793.83, 464.31, 107.49),
+			heading =  269.35,
+			ped = 'a_m_y_soucent_02',
+			scenario = 'WORLD_HUMAN_GUARD_STAND'
+		},
+		{ped = 'ig_chef2', scenario = 'WORLD_HUMAN_AA_COFFEE',loc = vec3(-319.18, -1317.57, 30.26), heading = 44.20,}, -- -319.18, -1317.57, 31.26, 44.20  DROGA
+	
+	}
+},
 
 	VendingMachineDrinks = {
-		name = 'Vending Machine',
-		inventory = {
-			{ name = 'water', price = 10 },
-			{ name = 'cola', price = 10 },
-		},
-		model = {
-			`prop_vend_soda_02`, `prop_vend_fridge01`, `prop_vend_water_01`, `prop_vend_soda_01`
-		}
-	}
+	name = 'Maquina Expendedora',
+	inventory = {
+	 		{ name = 'water', price = 20, metadata = { category = 'Drinks' } },
+	 		{ name = 'sprunk', price = 20, metadata = { category = 'Drinks' } },
+			{ name = 'flamingo_classic', price = 15, metadata = { category = 'Food' } },
+			{ name = 'cola', price = 15, metadata = { category = 'Drinks' } },
+	 	},
+	 	model = {
+	 		'prop_vend_soda_02', 'prop_vend_fridge01', 'prop_vend_water_01', 'prop_vend_soda_01', 'prop_vend_snak_01_tu', 'prop_vend_snak_01', 'm23_2_prop_m32_vend_drink_01a'
+	 	}
+	 },
+	VendingCoffeDrinks = {
+	name = 'Maquina de Cafes',
+	inventory = {
+	 		{ name = 'vasodecafe', price = 15, metadata = { category = 'Drinks' } },
+
+	 	},
+	 	model = {
+	 		'prop_vend_coffe_01'
+	 	}
+	 },
+	VendingHotdogEat = {
+	name = 'Puesto de Comida',
+	inventory = {
+	 		{ name = 'hotdogbarato', price = 15, metadata = { category = 'Food' } },
+			{ name = 'flamingo_classic', price = 15, metadata = { category = 'Food' } },
+			{ name = 'cola', price = 15, metadata = { category = 'Drinks' } },
+	 	},
+	 	model = {
+	 		'prop_hotdogstand_01', 'prop_burgerstand_01'
+	 	}
+	 }
+
+	 
 }

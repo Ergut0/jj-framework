@@ -1,25 +1,10 @@
----@todo separate module into smaller submodules to handle each framework
----starting to get bulky
 
----Checks whether the inventory player has a required group and rank
----@param inv table
----@param group string | table<string, number | number[]>
----@return string? groupName
----@return number? groupRank
 function server.hasGroup(inv, group)
 	if type(group) == 'table' then
-		for name, requiredRank in pairs(group) do
+		for name, rank in pairs(group) do
 			local groupRank = inv.player.groups[name]
-			if groupRank then
-				if type(requiredRank) == 'table' then
-					if lib.table.contains(requiredRank, groupRank) then
-						return name, groupRank
-					end
-				else
-					if groupRank >= (requiredRank or 0) then
-						return name, groupRank
-					end
-				end
+			if groupRank and groupRank >= (rank or 0) then
+				return name, groupRank
 			end
 		end
 	else
@@ -51,6 +36,58 @@ function server.buyLicense()
 end
 
 local Inventory = require 'modules.inventory.server'
+local Items = require 'modules.items.server'
+
+local function normaliseCurrency(currency)
+	if type(currency) == 'string' then
+		currency = currency:lower()
+	else
+		currency = 'money'
+	end
+
+	if currency == 'cash' then
+		return 'money'
+	end
+
+	return currency
+end
+
+server.normaliseCurrency = normaliseCurrency
+
+---@param inv OxInventory | number
+---@param currency string
+---@return number
+function server.getCurrencyBalance(inv, currency)
+	currency = normaliseCurrency(currency)
+	return Inventory.GetItemCount(inv, currency)
+end
+
+---@param inv OxInventory | number
+---@param currency string
+---@param amount number
+---@param context? string
+function server.removeCurrency(inv, currency, amount, context)
+	currency = normaliseCurrency(currency)
+	return Inventory.RemoveItem(inv, currency, amount)
+end
+
+---@param currency string
+---@param amount number
+---@return string
+function server.formatCurrencyLabel(currency, amount)
+	local normalised = normaliseCurrency(currency)
+
+	if normalised == 'money' then
+		return ('%s%s'):format(locale('$'), math.groupdigits(amount))
+	end
+
+	if normalised == 'bank' then
+		return ('%s %s'):format(math.groupdigits(amount), locale('bank_account') or 'Bank')
+	end
+
+	local label = Items(normalised)?.label or currency
+	return ('%s %s'):format(math.groupdigits(amount), label)
+end
 
 function server.playerDropped(source)
 	local inv = Inventory(source) --[[@as OxInventory]]

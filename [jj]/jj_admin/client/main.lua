@@ -322,6 +322,12 @@ local handlers = {
     tpCoords = function(coords)
         teleport(coords.x, coords.y, coords.z)
     end,
+    coords = function()
+        local coords = GetEntityCoords(cache.ped)
+        local text = ('vector4(%.2f, %.2f, %.2f, %.2f)'):format(coords.x, coords.y, coords.z, GetEntityHeading(cache.ped))
+        lib.setClipboard(text)
+        lib.notify({ description = ('Copiado: %s'):format(text), type = 'success' })
+    end,
     spectate = spectate,
     spawnVehicle = spawnVehicle,
     vehicleRepair = function()

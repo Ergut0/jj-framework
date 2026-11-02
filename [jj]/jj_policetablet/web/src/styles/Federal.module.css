@@ -1,0 +1,198 @@
+.container {
+  padding: 10px;
+  height: 88.3vh;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+.headerSection {
+  margin-bottom: 20px;
+  padding: 16px 20px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background-color: var(--secondary-color);
+}
+.title {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-primary);
+  font-size: 1.25rem;
+}
+.searchInput {
+  background-color: var(--primary-color) !important;
+  border-radius: 6px;
+  min-width: 220px;
+}
+.searchInput input {
+  background-color: var(--primary-color) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+.searchInput input:focus {
+  border-color: #ffffff26 !important;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+  padding: 4px;
+}
+.card {
+  background-color: var(--secondary-color) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 10px !important;
+  padding: 16px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  position: relative !important;
+  overflow: hidden !important;
+  transition:
+    transform 0.22s cubic-bezier(0.25, 0.8, 0.25, 1),
+    border-color 0.22s ease,
+    box-shadow 0.22s ease !important;
+}
+.card:hover {
+  transform: translateY(-0.6px) !important;
+  border-color: #d9534f66 !important;
+}
+.avatarWrapper {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid var(--border-color);
+  margin-bottom: 12px;
+  box-shadow: 0 4px 8px #0003;
+  transition: border-color 0.22s ease;
+}
+.card:hover .avatarWrapper {
+  border-color: #d9534f99;
+}
+.avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-align: center;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+.citizenid {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background-color: #ffffff0a !important;
+  border: 1px solid var(--border-color);
+  padding: 3px 8px !important;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  letter-spacing: 0.5px;
+  height: auto !important;
+}
+.jailSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 12px 0 16px;
+  background: #d9534f14;
+  border: 1px solid rgba(217, 83, 79, 0.2);
+  padding: 8px 16px;
+  border-radius: 6px;
+  width: 100%;
+  box-sizing: border-box;
+}
+.jailLabel {
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  letter-spacing: 0.8px;
+}
+.jailValue {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #ff6b6b;
+  text-shadow: 0 0 10px rgba(255, 107, 107, 0.2);
+  margin-top: 1px;
+}
+.buttonGroup {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+.releaseButton {
+  flex: 1.2;
+  font-weight: 700 !important;
+  font-size: 0.75rem !important;
+  padding: 0 6px !important;
+  text-transform: uppercase;
+  letter-spacing: 0.2px;
+  border-radius: 6px !important;
+  height: 36px !important;
+}
+.viewButton {
+  flex: 0.8;
+  font-weight: 700 !important;
+  font-size: 0.75rem !important;
+  padding: 0 6px !important;
+  text-transform: uppercase;
+  letter-spacing: 0.2px;
+  border-radius: 6px !important;
+  height: 36px !important;
+}
+.noJailed {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  border-radius: 8px;
+  padding: 40px;
+}
+.modalContent {
+  background-color: var(--secondary-color) !important;
+  color: var(--text-primary) !important;
+}
+@media (min-width: 1921px) {
+  .container {
+    padding: 14px;
+    height: 90.1vh;
+  }
+  .headerSection {
+    margin-bottom: 24px;
+    padding: 16px 24px;
+  }
+  .title {
+    font-size: 1.45rem;
+  }
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+  }
+  .card {
+    padding: 20px !important;
+  }
+  .avatarWrapper {
+    width: 130px;
+    height: 130px;
+    margin-bottom: 16px;
+  }
+  .name {
+    font-size: 1.15rem;
+  }
+  .jailSection {
+    margin: 16px 0 20px;
+    padding: 10px 20px;
+  }
+  .jailValue {
+    font-size: 1.45rem;
+  }
+}

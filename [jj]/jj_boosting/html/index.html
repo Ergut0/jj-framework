@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>jj_boosting</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="hud" class="hidden"></div>
+
+    <main id="terminal" class="hidden" aria-label="Terminal">
+      <aside id="sidebar">
+        <div class="brand">
+          <span class="brand-mark"></span>
+          <div>
+            <strong>BLACKLINE</strong>
+            <small>// boosting.net</small>
+          </div>
+        </div>
+        <nav id="nav"></nav>
+        <div id="balance"></div>
+      </aside>
+      <section id="content">
+        <header id="topbar">
+          <h1 id="title"></h1>
+          <button id="close" class="icon-button" type="button" aria-label="Cerrar">&times;</button>
+        </header>
+        <div id="view"></div>
+      </section>
+    </main>
+
+    <div id="hack" class="hidden" role="dialog" aria-modal="true"></div>
+    <div id="toasts"></div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

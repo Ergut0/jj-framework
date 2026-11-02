@@ -38,6 +38,12 @@ function JJ.Utils.Round(value, decimals)
     return math.floor(value * factor + 0.5) / factor
 end
 
+-- Los trabajos actuales, también los creados en marcha. Úsalo en vez de JJ.Config.Jobs,
+-- que en otro recurso es una copia del momento en que pidió el objeto del framework
+function JJ.GetJobs()
+    return Config.Jobs
+end
+
 -- Devuelve los datos públicos de un trabajo y grado, o nil si no existen
 function JJ.Utils.BuildJob(name, grade)
     local job = Config.Jobs[name]

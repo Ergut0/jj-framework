@@ -31,7 +31,7 @@ function Framework.GetGang()
     return { name = "none", grade = { level = 0 } }
 end
 
--- El aspecto se guarda en el personaje (jj_players.skin), donde también lo lee jj_multicharacter
+-- El aspecto se guarda en el personaje (jj_players.skin), donde también lo lee jj_personajes
 function Framework.SaveAppearance(appearance, identifier)
     local player = identifier and JJ.GetPlayerByIdentifier(identifier)
     if player and type(appearance) == "table" then

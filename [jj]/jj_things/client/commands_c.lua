@@ -84,20 +84,11 @@ RegisterCommand("fixui", function()
 end)
 
 RegisterCommand("rvoz", function()
-    if exports["pma-voice"] and exports["pma-voice"].toggleVoice then
-        local serverId = GetPlayerServerId(PlayerId())
-        Notify("Reiniciando sistema de voz")
-        local ok1, err1 = pcall(function()
-            exports["pma-voice"]:toggleVoice(serverId, false)
-        end)
-        Wait(2000)
-        local ok2, err2 = pcall(function()
-            exports["pma-voice"]:toggleVoice(serverId, true)
-        end)
-        if ok1 and ok2 then
-            Notify('Sistema de voz reiniciado', 'success', 5000)
-        end
-    end
+    Notify("Reiniciando sistema de voz")
+    MumbleSetActive(false)
+    Wait(2000)
+    MumbleSetActive(true)
+    Notify('Sistema de voz reiniciado', 'success', 5000)
 end)
 
 RegisterKeyMapping("rvoz", "Reiniciar voz", "keyboard", "F4")

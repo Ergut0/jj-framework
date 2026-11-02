@@ -34,8 +34,6 @@ function Utils.Raycast(flag, destination, size)
         Wait(0)
         local result, _, coords, _, entityHit = GetShapeTestResult(rayHandle)
         if result ~= 1 then
-            -- DrawLine(playerCoords.x, playerCoords.y, playerCoords.z + 0.5, destination.x, destination.y, destination.z, 0, 0, 255, 255)
-            -- DrawLine(playerCoords.x, playerCoords.y, playerCoords.z + 0.5, coords.x, coords.y, coords.z, 255, 0, 0, 255)
             local entityType
             if entityHit then entityType = GetEntityType(entityHit) end
             if entityHit and entityType ~= 0 then
@@ -69,7 +67,6 @@ function Utils.GetClosestPlayer()
     return targetId, targetPed
 end
 
--- Replace ox_inventory notify with ox_lib (backwards compatibility)
 function Utils.Notify(data)
     data.description = data.text
     data.text = nil
@@ -79,18 +76,8 @@ end
 RegisterNetEvent('ox_inventory:notify', Utils.Notify)
 exports('notify', Utils.Notify)
 
-local notifySuppressed = false
-
----@param value boolean
-local function setNotifySuppressed(value)
-    notifySuppressed = value
-end
-
-RegisterNetEvent('ox_inventory:suppressItemNotifications', setNotifySuppressed)
-exports('suppressItemNotifications', setNotifySuppressed)
-
 function Utils.ItemNotify(data)
-    if notifySuppressed or not client.itemnotify then
+    if not client.itemnotify then
         return
     end
 
@@ -116,14 +103,13 @@ local rewardTypes = 1 << 0 | 1 << 1 | 1 << 2 | 1 << 3 | 1 << 7 | 1 << 10
 
 local weaponWheelOverride = false
 
----Enables the weapon wheel, but disables the use of inventory weapons.
----Mostly used for weaponised vehicles, though could be called for "minigames"
 ---@param state? boolean
 ---@param override? boolean
 function Utils.WeaponWheel(state, override)
     if not override and weaponWheelOverride and state == false then
         return
     end
+
     if client.disableweapons then state = true end
     if state == nil then state = EnableWeaponWheel end
 
@@ -136,14 +122,11 @@ function Utils.WeaponWheel(state, override)
     SetWeaponsNoAutoreload(not state)
 
     if client.suppresspickups then
-        -- CLEAR_PICKUP_REWARD_TYPE_SUPPRESSION | SUPPRESS_PICKUP_REWARD_TYPE
         return state and N_0x762db2d380b48d04(rewardTypes) or N_0xf92099527db8e2a7(rewardTypes, true)
     end
 end
 
-exports('weaponWheel', function (state)
-    Utils.WeaponWheel(state, true)
-end)
+exports('weaponWheel', Utils.WeaponWheel)
 
 function Utils.CreateBlip(settings, coords)
     local blip = AddBlipForCoord(coords.x, coords.y, coords.z)
@@ -152,13 +135,13 @@ function Utils.CreateBlip(settings, coords)
     SetBlipScale(blip, settings.scale)
     SetBlipColour(blip, settings.colour)
     SetBlipAsShortRange(blip, true)
-    BeginTextCommandSetBlipName(settings.name)
+    BeginTextCommandSetBlipName('STRING')
+    AddTextComponentString(settings.name or '')
     EndTextCommandSetBlipName(blip)
 
     return blip
 end
 
----Takes OxTargetBoxZone or legacy zone data (PolyZone) and creates a zone.
 ---@param data OxTargetBoxZone | { length: number, minZ: number, maxZ: number, loc: vector3, heading: number, width: number, distance: number }
 ---@param options? OxTargetOption[]
 ---@return number
@@ -194,12 +177,26 @@ end
 
 local hasTextUi
 
----@param point CPoint
-function Utils.nearbyMarker(point)
-    DrawMarker(point.marker.type, point.coords.x, point.coords.y, point.coords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, point.marker.scale[1], point.marker.scale[2], point.marker.scale[3],
-        ---@diagnostic disable-next-line: param-type-mismatch
-        point.marker.colour[1], point.marker.colour[2], point.marker.colour[3], 222, false, false, 0, true, false, false, false)
+local function interactWithPoint(point)
+    CreateThread(function()
+        local handler = point.onInteract
 
+        if handler then
+            handler(point)
+            return
+        end
+
+        if point.inv == 'policeevidence' then
+            client.openInventory('policeevidence')
+        elseif point.inv == 'crafting' then
+            client.openInventory('crafting', { id = point.benchid, index = point.index })
+        else
+            client.openInventory(point.inv or 'drop', { id = point.invId, type = point.type })
+        end
+    end)
+end
+
+local function nearbyPrompt(point)
     if point.isClosest and point.currentDistance < 1.2 then
         if not hasTextUi then
             hasTextUi = point
@@ -207,15 +204,7 @@ function Utils.nearbyMarker(point)
         end
 
         if IsControlJustReleased(0, 38) then
-            CreateThread(function()
-                if point.inv == 'policeevidence' then
-                    client.openInventory('policeevidence')
-                elseif point.inv == 'crafting' then
-                    client.openInventory('crafting', { id = point.benchid, index = point.index })
-                else
-                    client.openInventory(point.inv or 'drop', { id = point.invId, type = point.type })
-                end
-            end)
+            interactWithPoint(point)
         end
     elseif hasTextUi == point then
         hasTextUi = nil
@@ -223,42 +212,22 @@ function Utils.nearbyMarker(point)
     end
 end
 
-function Utils.blurIn()
-    if IsScreenblurFadeRunning() then
-        DisableScreenblurFade()
+---@param point CPoint
+function Utils.nearbyMarker(point)
+    if point.marker ~= false then
+        local marker = point.marker or {}
+        local colour = marker.colour or marker
+        local scale = marker.scale or { 0.3, 0.2, 0.15 }
+        local markerType = marker.type or 2
+
+        DrawMarker(markerType, point.coords.x, point.coords.y, point.coords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, scale[1], scale[2], scale[3],
+            ---@diagnostic disable-next-line: param-type-mismatch
+            colour[1], colour[2], colour[3], 222, false, false, 0, true, false, false, false)
     end
 
-    TriggerScreenblurFadeIn(100)
+    nearbyPrompt(point)
 end
 
-function Utils.blurOut()
-    if IsScreenblurFadeRunning() then
-        DisableScreenblurFade()
-    end
-
-    TriggerScreenblurFadeOut(250)
-end
-
----@param serverId number
----@return string
-local function defaultGetPlayerName(serverId)
-    local playerId = GetPlayerFromServerId(serverId)
-    local playerName = GetPlayerName(playerId)
-    return ('[%d] %s'):format(serverId, playerName)
-end
-
-local getPlayerName = defaultGetPlayerName
-
-exports('setGetPlayerNameMethod', function (fn)
-    if type(fn) == "function" then
-        getPlayerName = fn
-    else
-        getPlayerName = defaultGetPlayerName
-    end
-end)
-
-function Utils.getPlayerName(serverId)
-    return getPlayerName(serverId)
-end
+Utils.nearbyPrompt = nearbyPrompt
 
 return Utils

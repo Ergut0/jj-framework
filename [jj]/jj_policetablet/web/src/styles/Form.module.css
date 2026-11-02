@@ -1,0 +1,32 @@
+.input {
+  background-color: var(--secondary-color);
+  border: solid 1px var(--border-color);
+}
+.input:disabled,
+.input[data-disabled] {
+  background-color: #333;
+  color: #c8c8c8;
+}
+.input:focus {
+  border: solid 1px rgba(255, 255, 255, 0.1);
+}
+.button {
+  background-color: var(--button-color-bg);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.button[disabled] {
+  background-color: #6464648c;
+}
+.button:hover {
+  background-color: var(--button-hover-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+}
+.button:hover[disabled] {
+  background-color: #6464648c;
+}

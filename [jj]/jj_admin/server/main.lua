@@ -345,6 +345,11 @@ actions.tpCoords = { handler = function(src, payload)
     return ok('Te has teletransportado', { close = true }), nil, ('%.1f %.1f %.1f'):format(x, y, z)
 end }
 
+actions.coords = { handler = function(src)
+    runClient(src, 'coords')
+    return ok(nil)
+end }
+
 actions.players = { handler = function(src)
     playerViewers[src] = not playerViewers[src] or nil
     runClient(src, playerViewers[src] and 'playersOn' or 'playersOff')
@@ -434,13 +439,8 @@ actions.unban = { handler = function(src, payload)
     return ok('Baneo eliminado'), ban.name
 end }
 
--- Llamadas de la interfaz
-
-lib.callback.register('jj_admin:server:canOpen', function(source)
-    return getLevel(source) ~= 'none'
-end)
-
-lib.callback.register('jj_admin:server:action', function(source, name, payload)
+-- Comprueba los permisos, ejecuta la acción y la deja en el registro
+local function runAction(source, name, payload)
     local action = type(name) == 'string' and actions[name]
     if not action or not canUse(source, name) then
         return fail('No tienes permiso para esta acción')
@@ -461,7 +461,181 @@ lib.callback.register('jj_admin:server:action', function(source, name, payload)
         log(source, name, targetName, details)
     end
     return result
+end
+
+-- Comandos: usan las mismas acciones que el menú, con sus permisos y su registro
+
+local function reply(src, message, success)
+    if not message then return end
+    if src == 0 then
+        print(('[jj_admin] %s'):format(message))
+    else
+        TriggerClientEvent('ox_lib:notify', src, { description = message, type = success and 'success' or 'error' })
+    end
+end
+
+local ID_PARAM = { name = 'id', help = 'ID del jugador' }
+
+local function targetPayload(args)
+    return args[1] and { target = args[1] } or nil
+end
+
+local function emptyPayload()
+    return {}
+end
+
+-- Lee coordenadas escritas a mano o pegadas: 1 2 3, 1, 2, 3 o vector3(1, 2, 3)
+local function parseCoords(args)
+    local text = table.concat(args, ' '):gsub('%a+%d*', '')
+    local numbers = {}
+    for number in text:gmatch('%-?%d+%.?%d*') do
+        numbers[#numbers + 1] = number
+    end
+    return numbers
+end
+
+local COMMANDS = {
+    {
+        names = { 'tp' }, action = 'goto', inGame = true,
+        help = 'Ir a un jugador o a unas coordenadas', usage = '/tp <id> o /tp <x> <y> <z>',
+        params = { { name = 'id o x y z', help = 'ID del jugador o coordenadas' } },
+        build = function(args)
+            local numbers = parseCoords(args)
+            if #numbers >= 3 then
+                return { x = numbers[1], y = numbers[2], z = numbers[3] }, 'tpCoords'
+            end
+            return #args == 1 and targetPayload(args) or nil
+        end,
+    },
+    { names = { 'tpm' }, action = 'tpWaypoint', inGame = true, help = 'Ir al marcador del mapa', build = emptyPayload },
+    { names = { 'bring', 'traer' }, action = 'bring', inGame = true, help = 'Traer a un jugador', usage = '/bring <id>', params = { ID_PARAM }, build = targetPayload },
+    { names = { 'espectar' }, action = 'spectate', inGame = true, help = 'Espectar a un jugador', usage = '/espectar <id>', params = { ID_PARAM }, build = targetPayload },
+    { names = { 'congelar' }, action = 'freeze', help = 'Congelar o descongelar a un jugador', usage = '/congelar <id>', params = { ID_PARAM }, build = targetPayload },
+    {
+        names = { 'kick' }, action = 'kick',
+        help = 'Expulsar a un jugador', usage = '/kick <id> [motivo]',
+        params = { ID_PARAM, { name = 'motivo', help = 'Motivo de la expulsión' } },
+        build = function(args)
+            return args[1] and { target = args[1], reason = table.concat(args, ' ', 2) } or nil
+        end,
+    },
+    {
+        names = { 'ban' }, action = 'ban',
+        help = 'Banear a un jugador', usage = '/ban <id> <horas, 0 = permanente> [motivo]',
+        params = { ID_PARAM, { name = 'horas', help = '0 = permanente' }, { name = 'motivo', help = 'Motivo del baneo' } },
+        build = function(args)
+            -- Las horas son obligatorias: un error al escribirlas no debe acabar en un baneo permanente
+            if not args[1] or not tonumber(args[2]) then return nil end
+            return { target = args[1], hours = args[2], reason = table.concat(args, ' ', 3) }
+        end,
+    },
+    {
+        names = { 'unban' }, action = 'unban',
+        help = 'Quitar un baneo', usage = '/unban <id del baneo>',
+        params = { { name = 'id', help = 'ID del baneo, en la lista del menú' } },
+        build = function(args)
+            return args[1] and { id = args[1] } or nil
+        end,
+    },
+    { names = { 'noclip' }, action = 'noclip', inGame = true, help = 'Activar o desactivar el noclip', build = emptyPayload },
+    { names = { 'god' }, action = 'god', inGame = true, help = 'Activar o desactivar el modo dios', build = emptyPayload },
+    { names = { 'invisible' }, action = 'invisible', inGame = true, help = 'Activar o desactivar la invisibilidad', build = emptyPayload },
+    { names = { 'jugadores' }, action = 'players', inGame = true, help = 'Ver los nombres de los jugadores y sus blips', build = emptyPayload },
+    { names = { 'coords' }, action = 'coords', inGame = true, help = 'Copiar tus coordenadas', build = emptyPayload },
+    {
+        names = { 'car', 'coche' }, action = 'spawnVehicle', inGame = true,
+        help = 'Crear un vehículo', usage = '/car <modelo>',
+        params = { { name = 'modelo', help = 'Por ejemplo adder' } },
+        build = function(args)
+            return args[1] and { model = args[1] } or nil
+        end,
+    },
+    { names = { 'dv' }, action = 'vehicleDelete', inGame = true, help = 'Borrar el vehículo cercano', build = emptyPayload },
+    { names = { 'fix' }, action = 'vehicleRepair', inGame = true, help = 'Reparar el vehículo cercano', build = emptyPayload },
+    { names = { 'flip' }, action = 'vehicleFlip', inGame = true, help = 'Enderezar el vehículo cercano', build = emptyPayload },
+    {
+        names = { 'darcoche' }, action = 'giveVehicle',
+        help = 'Dar un vehículo en propiedad', usage = '/darcoche <id> <modelo>',
+        params = { ID_PARAM, { name = 'modelo', help = 'Por ejemplo adder' } },
+        build = function(args)
+            return args[1] and args[2] and { target = args[1], model = args[2] } or nil
+        end,
+    },
+    {
+        names = { 'clima' }, action = 'weather',
+        help = 'Cambiar el clima', usage = '/clima <tipo o auto>',
+        params = { { name = 'tipo', help = 'CLEAR, RAIN, THUNDER, SNOW... o auto' } },
+        build = function(args)
+            if not args[1] then return nil end
+            return { weather = args[1]:lower() ~= 'auto' and args[1]:upper() }
+        end,
+    },
+    {
+        names = { 'hora' }, action = 'time',
+        help = 'Cambiar la hora', usage = '/hora <hora> [minutos] o /hora auto',
+        params = { { name = 'hora', help = 'De 0 a 23, o auto' }, { name = 'minutos', help = 'De 0 a 59' } },
+        build = function(args)
+            if not args[1] then return nil end
+            if args[1]:lower() == 'auto' then return { hour = false } end
+            return { hour = args[1], minute = args[2] }
+        end,
+    },
+}
+
+for _, command in ipairs(COMMANDS) do
+    for _, name in ipairs(command.names) do
+        RegisterCommand(name, function(src, args)
+            if not canUse(src, command.action) then
+                return reply(src, 'No tienes permiso para esta acción', false)
+            end
+            if command.inGame and src == 0 then
+                return reply(src, 'Este comando solo se puede usar dentro del juego', false)
+            end
+
+            local payload, action = command.build(args)
+            if not payload then
+                return reply(src, ('Uso: %s'):format(command.usage), false)
+            end
+
+            local result = runAction(src, action or command.action, payload)
+            reply(src, result.message, result.ok)
+        end, false)
+    end
+end
+
+-- Cada uno solo ve en el chat los comandos que puede usar
+local function sendSuggestions(src)
+    local suggestions = {}
+    for _, command in ipairs(COMMANDS) do
+        if canUse(src, command.action) then
+            for _, name in ipairs(command.names) do
+                suggestions[#suggestions + 1] = { name = '/' .. name, help = command.help, params = command.params }
+            end
+        end
+    end
+    if #suggestions > 0 then
+        TriggerClientEvent('chat:addSuggestions', src, suggestions)
+    end
+end
+
+AddEventHandler('jj:server:playerLoaded', sendSuggestions)
+
+CreateThread(function()
+    for _, src in ipairs(JJ.GetPlayers()) do
+        sendSuggestions(src)
+    end
 end)
+
+-- Llamadas de la interfaz
+
+lib.callback.register('jj_admin:server:canOpen', function(source)
+    return getLevel(source) ~= 'none'
+end)
+
+lib.callback.register('jj_admin:server:action', function(source, name, payload)
+    return runAction(source, name, payload)
+end)
+
 
 lib.callback.register('jj_admin:server:getData', function(source)
     local level = getLevel(source)
@@ -504,7 +678,7 @@ lib.callback.register('jj_admin:server:getData', function(source)
     table.sort(players, function(a, b) return a.id < b.id end)
 
     local jobs = {}
-    for name, job in pairs(JJ.Config.Jobs) do
+    for name, job in pairs(JJ.GetJobs()) do
         local grades = {}
         for grade, data in pairs(job.grades) do
             grades[#grades + 1] = { value = grade, label = data.label }

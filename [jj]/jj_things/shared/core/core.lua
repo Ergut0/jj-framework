@@ -24,10 +24,10 @@ function HelpNotify(message)
     EndTextCommandDisplayHelp(0, false, true, -1)
 end
 
--- av_gangs es opcional: sin él, nadie pertenece a una banda
+-- Banda del jugador según jj_gangs. Sin ese recurso, nadie pertenece a una banda
 function GetGang()
-    if GetResourceState('av_gangs') == 'started' then
-        return exports.av_gangs:getGang()
+    if GetResourceState('jj_gangs') == 'started' then
+        return exports.jj_gangs:getGang()
     end
     return nil
 end

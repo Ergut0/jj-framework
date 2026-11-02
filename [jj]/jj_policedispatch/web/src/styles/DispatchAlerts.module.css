@@ -1,0 +1,114 @@
+.container {
+  border: 1px solid var(--mantine-color-dark-6);
+  background-color: #000000d3;
+  border-radius: 7px;
+  flex-direction: column;
+  min-width: 350px;
+  max-width: 350px;
+  display: flex;
+  box-shadow: 0 4px 6px #0000004d;
+}
+.header {
+  border-bottom: 1px solid var(--mantine-color-dark-6);
+  background-color: #292929b7;
+  border-top-left-radius: 7px;
+  border-top-right-radius: 7px;
+  padding: 10px 17px;
+}
+.content {
+  gap: 10px;
+  margin-top: 20px;
+  padding-bottom: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.footer {
+  border-top: 1px solid var(--mantine-color-dark-6);
+  background-color: #292929b7;
+  border-bottom-right-radius: 7px;
+  border-bottom-left-radius: 7px;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  padding: 8px;
+  display: flex;
+}
+.vehColor {
+  border-radius: 2px;
+  min-width: 60px;
+  min-height: 15px;
+}
+.pinnedIcon {
+  color: var(--mantine-color-green-1);
+  transform: rotate(-45deg);
+}
+@keyframes pulseRed {
+  0% {
+    border-color: #e0323280;
+    box-shadow:
+      0 0 5px #e0323266,
+      0 4px 6px #0000004d;
+  }
+  50% {
+    border-color: #e03232;
+    box-shadow:
+      0 0 15px #e03232cc,
+      0 4px 6px #0000004d;
+  }
+  to {
+    border-color: #e0323280;
+    box-shadow:
+      0 0 5px #e0323266,
+      0 4px 6px #0000004d;
+  }
+}
+.containerPanic {
+  animation: 1.5s ease-in-out infinite pulseRed;
+  border: 1px solid #e03232cc !important;
+}
+.headerPanic {
+  background-color: #e0323233 !important;
+  border-bottom: 1px solid #e0323266 !important;
+}
+.footerPanic {
+  background-color: #e0323233 !important;
+  border-top: 1px solid #e0323266 !important;
+}
+.gridDetails {
+  grid-template-columns: auto auto;
+  gap: 8px 16px;
+  width: 100%;
+  display: grid;
+}
+@keyframes pulseOrange {
+  0% {
+    border-color: #a855f799;
+    box-shadow:
+      0 0 5px #a855f766,
+      0 4px 6px #0000004d;
+  }
+  50% {
+    border-color: #a855f7;
+    box-shadow:
+      0 0 14px #a855f7cc,
+      0 4px 6px #0000004d;
+  }
+  to {
+    border-color: #a855f799;
+    box-shadow:
+      0 0 5px #a855f766,
+      0 4px 6px #0000004d;
+  }
+}
+.containerAssigned {
+  animation: 2s ease-in-out infinite pulseOrange;
+  border: 1px solid #a855f7cc !important;
+}
+.headerAssigned {
+  background-color: #a855f733 !important;
+  border-bottom: 1px solid #a855f766 !important;
+}
+.footerAssigned {
+  background-color: #a855f733 !important;
+  border-top: 1px solid #a855f766 !important;
+}

@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="referrer" content="no-referrer" />
+    <title>Grafiti</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" />
+    <style>
+      html,
+      body {
+        width: 512px;
+        height: 512px;
+        margin: 0;
+        overflow: hidden;
+        background: transparent;
+      }
+
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      #image {
+        display: none;
+        width: 512px;
+        height: 512px;
+        object-fit: contain;
+      }
+
+      #tag {
+        display: none;
+        box-sizing: border-box;
+        width: 512px;
+        padding: 0 16px;
+        font-family: 'Permanent Marker', Impact, sans-serif;
+        font-size: 120px;
+        line-height: 1;
+        text-align: center;
+        text-transform: uppercase;
+        transform: rotate(-5deg);
+        filter: drop-shadow(4px 5px 0 #000000cc);
+      }
+    </style>
+  </head>
+  <body>
+    <img id="image" alt="" referrerpolicy="no-referrer" />
+    <div id="tag"></div>
+    <script>
+      const image = document.getElementById('image');
+      const tag = document.getElementById('tag');
+      let current = '';
+
+      // Los nombres largos se reducen hasta caber en la pared
+      const fit = () => {
+        let size = 120;
+        tag.style.fontSize = size + 'px';
+        while (size > 30 && (tag.scrollHeight > 460 || tag.scrollWidth > tag.clientWidth)) {
+          size -= 6;
+          tag.style.fontSize = size + 'px';
+        }
+      };
+
+      const showTag = (info) => {
+        image.style.display = 'none';
+        tag.textContent = info.text || '';
+        tag.style.color = info.color || '#ffffff';
+        tag.style.display = 'block';
+        fit();
+        document.fonts.ready.then(fit);
+      };
+
+      const show = (info) => {
+        if (!info.url) return showTag(info);
+        tag.style.display = 'none';
+        image.onload = () => {
+          image.style.display = 'block';
+        };
+        // Si la imagen ya no existe, se ve el nombre de la banda en lugar de nada
+        image.onerror = () => showTag(info);
+        image.src = info.url;
+      };
+
+      window.addEventListener('message', (event) => {
+        const message = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+        if (message.action !== 'loadGraffiti') return;
+
+        // El cliente repite el mensaje por si la página aún no había cargado
+        const key = JSON.stringify(message.info);
+        if (key === current) return;
+        current = key;
+        show(message.info);
+      });
+    </script>
+  </body>
+</html>

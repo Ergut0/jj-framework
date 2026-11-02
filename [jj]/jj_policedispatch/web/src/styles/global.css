@@ -1,0 +1,53 @@
+@import "https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap";
+*,
+:before,
+:after {
+  box-sizing: border-box;
+}
+.mantine-focus-auto:focus-visible,
+.mantine-focus-always:focus {
+  outline: 2px solid var(--mantine-primary-color-filled);
+  outline-offset: calc(0.125rem * var(--mantine-scale));
+}
+:where([dir="rtl"]) .mantine-rotate-rtl {
+  transform: rotate(180deg);
+}
+:root {
+  color-scheme: unset;
+  --mantine-color-green-0: #faf5ff;
+  --mantine-color-green-1: #e9d5ff;
+  --mantine-color-green-2: #d8b4fe;
+  --mantine-color-green-3: #a855f7;
+  --mantine-color-green-4: #9333ea;
+  --mantine-color-green-5: #7e22ce;
+  --mantine-color-green-6: #6b21a8;
+  --mantine-color-green-7: #581c87;
+  --mantine-color-green-8: #4c1d95;
+  --mantine-color-green-9: #3f2206;
+  --mantine-color-green-filled: #a855f7;
+  --mantine-color-green-filled-hover: #9333ea;
+  --mantine-color-green-light: #a855f726;
+  --mantine-color-green-light-hover: #a855f740;
+  --mantine-color-green-light-color: #a855f7;
+  --mantine-color-green-outline: #a855f7;
+  --mantine-color-green-outline-hover: #a855f726;
+}
+* {
+  font-family: Manrope, sans-serif;
+}
+body {
+  -webkit-user-select: none;
+  user-select: none;
+  background-color: #0000;
+  margin: 0;
+  padding: 0;
+}
+.mantine-ScrollArea-thumb {
+  background-color: var(--mantine-color-green-2);
+  border-radius: 5px;
+  width: 1px;
+}
+.mantine-focus-auto:focus-visible,
+.mantine-focus-always:focus {
+  display: none;
+}

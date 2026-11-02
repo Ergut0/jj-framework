@@ -1,19 +1,5 @@
 local Inventory = require 'modules.inventory.server'
 local Items = require 'modules.items.server'
-local db = require 'modules.mysql.server'
-
-db.setup({
-	user = { table = 'users', col = 'identifier' },
-	vehicle = { table = 'owned_vehicles', col = 'plate' },
-})
-
-local itemStatuses = {}
-
-for name, item in pairs(lib.load('data.items') or {}) do
-	itemStatuses[name] = item.client?.status
-end
-
-local isESXversion = lib.checkDependency('es_extended', '1.16.0')
 
 AddEventHandler('esx:playerDropped', server.playerDropped)
 
@@ -45,20 +31,6 @@ SetTimeout(500, function()
 end)
 
 server.accounts.black_money = 0
-
-if isESXversion then
-	AddEventHandler('ox_inventory:usedItem', function(playerId, itemName)
-		local status = itemStatuses[itemName]
-
-		if not status then return end
-
-		for name, value in pairs(status) do
-			if type(value) == 'number' then
-				TriggerEvent('esx_status:add', playerId, name, value)
-			end
-		end
-	end)
-end
 
 ---@diagnostic disable-next-line: duplicate-set-field
 function server.setPlayerData(player)
@@ -104,11 +76,63 @@ function server.buyLicense(inv, license)
 	return true, 'have_purchased'
 end
 
---- Takes traditional item data and updates it to support ox_inventory, i.e.
---- ```
---- Old: {"cola":1, "burger":3}
---- New: [{"slot":1,"name":"cola","count":1}, {"slot":2,"name":"burger","count":3}]
----```
+local function normaliseCurrency(currency)
+	if server.normaliseCurrency then
+		return server.normaliseCurrency(currency)
+	end
+
+	currency = type(currency) == 'string' and currency:lower() or 'money'
+	if currency == 'cash' then currency = 'money' end
+	return currency
+end
+
+---@diagnostic disable-next-line: duplicate-set-field
+function server.getCurrencyBalance(inv, currency)
+	local normalised = normaliseCurrency(currency)
+	local xPlayer = ESX and ESX.GetPlayerFromId(inv.id)
+
+	if xPlayer then
+		if normalised == 'money' then
+			return xPlayer.getMoney()
+		end
+
+		local account = xPlayer.getAccount(normalised)
+		if account and account.money then
+			return account.money
+		end
+	end
+
+	return Inventory.GetItemCount(inv, normalised)
+end
+
+---@diagnostic disable-next-line: duplicate-set-field
+function server.removeCurrency(inv, currency, amount, context)
+	local normalised = normaliseCurrency(currency)
+	local xPlayer = ESX and ESX.GetPlayerFromId(inv.id)
+
+	if xPlayer then
+		if normalised == 'money' then
+			xPlayer.removeMoney(amount)
+			Inventory.SetItem(inv, 'money', xPlayer.getMoney())
+			return true
+		else
+			local account = xPlayer.getAccount(normalised)
+			if account then
+				xPlayer.removeAccountMoney(normalised, amount)
+
+				if Items(normalised) then
+					local updated = xPlayer.getAccount(normalised)?.money or 0
+					Inventory.SetItem(inv, normalised, updated)
+				end
+
+				return true
+			end
+		end
+	end
+
+	return Inventory.RemoveItem(inv, normalised, amount)
+end
+
 ---@diagnostic disable-next-line: duplicate-set-field
 function server.convertInventory(playerId, items)
 	if type(items) == 'table' then

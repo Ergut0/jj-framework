@@ -1,11 +1,3 @@
---[[
-	Intended for use with https://github.com/project-error/pefcl
-	config.useFrameworkIntegration.resource should be set as "ox_inventory"
-
-	This isn't intended for use with frameworks with their own accounts,
-	use the proper pefcl-framework resources and ensure item/account syncing
-	works on your own.
-]]
 
 local Inventory = require 'modules.inventory.server'
 
@@ -61,6 +53,5 @@ exports('giveCard', function(source, card)
 	})
 end)
 
----no-op
 exports('getBank', function() end)
 

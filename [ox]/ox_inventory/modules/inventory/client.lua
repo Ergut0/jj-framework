@@ -5,7 +5,6 @@ local Inventory = {}
 Inventory.Dumpsters = lib.array:new(218085040, 666561306, -58485588, -206690185, 1511880420, 682791951)
 
 if shared.networkdumpsters then
-    -- Make sure dumpsters are frozen to ensure persistent position across clients
     SetInterval(function()
         local objects = GetGamePool('CObject')
 
@@ -53,8 +52,6 @@ local backDoorIds = { 2, 3 }
 
 function Inventory.CanAccessTrunk(entity)
     if cache.vehicle or not NetworkGetEntityIsNetworked(entity) then return end
-
-    if IsEntityDead(entity) then return end
 
     local vehicleHash = GetEntityModel(entity)
     local vehicleClass = GetVehicleClass(entity)
@@ -109,7 +106,25 @@ if shared.target then
     exports.ox_target:addModel(Inventory.Dumpsters, {
         icon = 'fas fa-dumpster',
         label = locale('search_dumpster'),
-        onSelect = function(data) return Inventory.OpenDumpster(data.entity) end,
+        onSelect = function(data)
+            TaskTurnPedToFaceEntity(cache.ped, data.entity, 1000)
+            if lib.progressBar({
+                duration = 2000,
+                label = locale('search_dumpster'),
+                useWhileRunning = false,
+                anim = {
+                    dict = 'missexile3',
+                    clip = 'ex03_dingy_search_case_a_michael'
+                },
+                disable = {
+                    move = true,
+                    car = true,
+                    combat = true
+                }
+            }) then
+                Inventory.OpenDumpster(data.entity)
+            end
+        end,
         distance = 2
     })
 
@@ -235,7 +250,6 @@ function Inventory.GetSlotsWithItem(itemName, metadata, strict)
 
     if not inventory or not item then return end
 
-
     metadata = assertMetadata(metadata)
     local response = {}
     local n = 0
@@ -284,7 +298,6 @@ function Inventory.GetItemCount(itemName, metadata, strict)
         return item.count
     end
 
-
     metadata = assertMetadata(metadata)
     local count = 0
     local tablematch = strict and table.matches or table.contains
@@ -299,7 +312,6 @@ function Inventory.GetItemCount(itemName, metadata, strict)
 end
 
 exports('GetItemCount', Inventory.GetItemCount)
-
 
 local function openEvidence()
     client.openInventory('policeevidence')

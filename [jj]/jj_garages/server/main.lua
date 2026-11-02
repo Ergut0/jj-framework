@@ -49,6 +49,9 @@ local function HasGarageAccess(player, garage)
     if garage.type == 'public' or garage.type == 'depot' then
         return true
     end
+    if garage.type == 'gang' then
+        return GetResourceState('jj_gangs') == 'started' and exports.jj_gangs:isMember(player.source, garage.gang)
+    end
     if garage.type ~= 'job' then
         return false
     end
@@ -310,6 +313,34 @@ local function AddVehicle(identifier, model, garageId)
 end
 
 exports('addVehicle', AddVehicle)
+
+exports('getGarageLabel', function(id)
+    local garage = Config.Garages[id]
+    return garage and garage.label or false
+end)
+
+-- Garajes creados en marcha por otros recursos, como los de las bandas
+local dynamicGarages = {}
+
+exports('registerGarage', function(id, garage)
+    garage.category = garage.category or Config.VehicleClass.car
+    dynamicGarages[id] = garage
+    Config.Garages[id] = garage
+    TriggerClientEvent('jj_garages:client:addGarage', -1, id, garage)
+end)
+
+-- Los vehículos guardados allí pasan al garaje por defecto para que nadie los pierda
+exports('removeGarage', function(id)
+    if not dynamicGarages[id] then return end
+    dynamicGarages[id] = nil
+    Config.Garages[id] = nil
+    MySQL.update.await('UPDATE jj_vehicles SET garage = ? WHERE garage = ?', { DEFAULT_GARAGE, id })
+    TriggerClientEvent('jj_garages:client:removeGarage', -1, id)
+end)
+
+lib.callback.register('jj_garages:server:getDynamicGarages', function()
+    return dynamicGarages
+end)
 
 -- Envía un vehículo al depósito, y lo elimina si está en el mundo
 exports('impoundVehicle', function(rawPlate, price)

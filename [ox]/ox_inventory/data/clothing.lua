@@ -1,0 +1,38 @@
+return {
+    enabled = true,
+    slotOffset = 1200,
+    layout = {
+        left  = { 0, 1, 2, 3, 4, 5 },
+        right = { 6, 7, 8, 9, 10, 11 },
+    },
+    slots = {
+        male = {
+            [0] = { label = 'Sombrero',  itemName = 'hat',      prop      = 0,  icon = 'hat',      empty = { drawable = -1, texture = 0 } },
+            [1] = { label = 'Máscara',   itemName = 'mask',     component = 1,  icon = 'mask',     empty = { drawable = 0,  texture = 0 } },
+            [2] = { label = 'Gafas',     itemName = 'glasses',  prop      = 1,  icon = 'glasses',  empty = { drawable = -1, texture = 0 } },
+            [3] = { label = 'Collar',    itemName = 'necklace', component = 7,  icon = 'necklace', empty = { drawable = 0,  texture = 0 } },
+            [4] = { label = 'Chaleco',   itemName = 'vest',     component = 9,  icon = 'vest',     empty = { drawable = 0,  texture = 0 } },
+            [5] = { label = 'Torso',     itemName = 'shirt',    component = 8,  icon = 'torso',    empty = { drawable = 15, texture = 0 } },
+            [6] = { label = 'Chaqueta',  itemName = 'top',   component = 11, icon = 'jacket',   empty = { drawable = 15, texture = 0 } },
+            [7] = { label = 'Guantes',   itemName = 'gloves',   component = 3,  icon = 'gloves',   empty = { drawable = 15, texture = 0 } },
+            [8] = { label = 'Pantalón',  itemName = 'pants',    component = 4,  icon = 'pants',    empty = { drawable = 21, texture = 0 } },
+            [9] = { label = 'Zapatos',   itemName = 'shoes',    component = 6,  icon = 'shoes',    empty = { drawable = 34, texture = 0 } },
+            [10] = { label = 'Mochilas',   itemName = 'backpack',    component = 5,  icon = 'backpack',    empty = { drawable = 0, texture = 0 } },
+            [11] = { label = 'Aretes',   itemName = 'ear',    prop = 2,  icon = 'ear',    empty = { drawable = -1, texture = 0 } },
+        },
+        female = {
+            [0] = { label = 'Sombrero',  itemName = 'hat',      prop      = 0,  icon = 'hat',      empty = { drawable = -1, texture = 0 } },
+            [1] = { label = 'Máscara',   itemName = 'mask',     component = 1,  icon = 'mask',     empty = { drawable = 0,  texture = 0 } },
+            [2] = { label = 'Gafas',     itemName = 'glasses',  prop      = 1,  icon = 'glasses',  empty = { drawable = -1, texture = 0 } },
+            [3] = { label = 'Collar',    itemName = 'necklace', component = 7,  icon = 'necklace', empty = { drawable = 0,  texture = 0 } },
+            [4] = { label = 'Chaleco',   itemName = 'vest',     component = 9,  icon = 'vest',     empty = { drawable = 0,  texture = 0 } },
+            [5] = { label = 'Torso',     itemName = 'shirt',    component = 8,  icon = 'torso',    empty = { drawable = 2,  texture = 0 } },
+            [6] = { label = 'Chaqueta',  itemName = 'top',   component = 11, icon = 'jacket',   empty = { drawable = 15, texture = 0 } },
+            [7] = { label = 'Guantes',   itemName = 'gloves',   component = 3,  icon = 'gloves',   empty = { drawable = 15, texture = 0 } },
+            [8] = { label = 'Pantalón',  itemName = 'pants',    component = 4,  icon = 'pants',    empty = { drawable = 15, texture = 0 } },
+            [9] = { label = 'Zapatos',   itemName = 'shoes',    component = 6,  icon = 'shoes',    empty = { drawable = 35, texture = 0 } },
+            [10] = { label = 'Mochilas',   itemName = 'backpack',    component = 5,  icon = 'backpack',    empty = { drawable = 0, texture = 0 } },
+            [11] = { label = 'Aretes',   itemName = 'ear',    prop = 2,  icon = 'ear',    empty = { drawable = -1, texture = 0 } },
+        },
+    },
+}

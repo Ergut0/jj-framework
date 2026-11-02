@@ -1,0 +1,135 @@
+.container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 98%;
+  height: 95vh;
+  margin: 0 auto;
+  background-color: var(--primary-color);
+  border-radius: 5px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 0 25px #000000b3;
+  display: flex;
+  transition:
+    transform 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.5s ease-out;
+}
+.tabletOpen {
+  transform: translate(-50%, -50%);
+  opacity: 1;
+  pointer-events: auto;
+}
+.tabletClosed {
+  transform: translate(-50%, 120vh);
+  opacity: 0;
+  pointer-events: none;
+}
+.leftPanel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 13%;
+  height: 100%;
+  background-color: var(--secondary-color);
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border-right: 2px solid var(--border-color);
+}
+.imageContainer {
+  width: 100%;
+  height: 15vh;
+  border-top-left-radius: 5px;
+  background-color: var(--secondary-color);
+  border-bottom: 2px solid var(--border-color);
+}
+.image {
+  position: relative;
+  margin: 0 auto;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 60%;
+  height: auto;
+}
+.navContainer {
+  width: 100%;
+  height: calc(100% - 15vh - 2px);
+}
+.navButton {
+  width: 98%;
+  height: 50px;
+  border: none;
+  background-color: transparent;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  justify-content: start;
+  margin: 9px auto;
+}
+.navButton:hover {
+  background-color: var(--primary-color);
+}
+.topPanel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 87%;
+  height: 6.6vh;
+  border-top-right-radius: 5px;
+  background-color: var(--secondary-color);
+  border-bottom: 2px solid var(--border-color);
+}
+.topButtonGroup {
+  position: relative;
+  margin-left: 15px;
+  top: calc(100% - 42px);
+}
+.topTabButton {
+  border-radius: 5px 5px 0 0;
+  border: none;
+}
+.topTapButtonActive {
+  background-color: var(--button-hover);
+  color: #fff;
+}
+.closeButton:hover {
+  color: #fff;
+}
+.rightPanel {
+  position: absolute;
+  top: 7%;
+  right: 0;
+  width: 87%;
+  border-bottom-right-radius: 5px;
+}
+.offDutyState {
+  height: 88.4vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+  font-size: 24px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-primary);
+}
+.dutyButton {
+  position: absolute;
+  bottom: 10px;
+  right: 30px;
+}
+@media (min-width: 1921px) {
+  .topPanel {
+    width: 88%;
+    height: 5vh;
+  }
+  .rightPanel {
+    top: 5.1%;
+    width: 87.8%;
+  }
+  .leftPanel {
+    width: 12%;
+  }
+}

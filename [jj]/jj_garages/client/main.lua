@@ -28,6 +28,9 @@ local function HasGarageAccess(garage)
     if garage.type == 'public' or garage.type == 'depot' then
         return true
     end
+    if garage.type == 'gang' then
+        return LocalPlayer.state.jjGang == garage.gang
+    end
     if garage.type ~= 'job' or not PlayerJob then
         return false
     end
@@ -272,6 +275,39 @@ local function OnGarageKey(index, garage)
     end)
 end
 
+local dynamicZones = {}
+
+local function CreateGarageZone(index, garage)
+    if garage.showBlip then
+        CreateBlips(garage)
+    end
+
+    return lib.zones.sphere({
+        coords = garage.takeVehicle,
+        radius = 10.0,
+        debug = Config.DebugTarget,
+        inside = function()
+            if not HasGarageAccess(garage) then
+                clearPrompt()
+                return
+            end
+            setPrompt(GetPromptText(garage))
+            if IsControlJustReleased(0, 38) then
+                OnGarageKey(index, garage)
+            end
+        end,
+        onExit = clearPrompt,
+    })
+end
+
+local function AddDynamicGarage(id, garage)
+    if dynamicZones[id] then
+        dynamicZones[id]:remove()
+    end
+    Config.Garages[id] = garage
+    dynamicZones[id] = CreateGarageZone(id, garage)
+end
+
 local function CreateBlipsZones()
     local PlayerData = JJ.GetPlayerData()
     PlayerJob = PlayerData and PlayerData.job
@@ -280,30 +316,30 @@ local function CreateBlipsZones()
     systemCreated = true
 
     for index, garage in pairs(Config.Garages) do
-        if garage.showBlip then
-            CreateBlips(garage)
-        end
+        CreateGarageZone(index, garage)
+    end
 
-        lib.zones.sphere({
-            coords = garage.takeVehicle,
-            radius = 10.0,
-            debug = Config.DebugTarget,
-            inside = function()
-                if not HasGarageAccess(garage) then
-                    clearPrompt()
-                    return
-                end
-                setPrompt(GetPromptText(garage))
-                if IsControlJustReleased(0, 38) then
-                    OnGarageKey(index, garage)
-                end
-            end,
-            onExit = clearPrompt,
-        })
+    for id, garage in pairs(lib.callback.await('jj_garages:server:getDynamicGarages', false) or {}) do
+        AddDynamicGarage(id, garage)
     end
 end
 
 -- Handlers
+
+RegisterNetEvent('jj_garages:client:addGarage', function(id, garage)
+    if systemCreated then
+        AddDynamicGarage(id, garage)
+    end
+end)
+
+RegisterNetEvent('jj_garages:client:removeGarage', function(id)
+    if dynamicZones[id] then
+        dynamicZones[id]:remove()
+        dynamicZones[id] = nil
+        clearPrompt()
+    end
+    Config.Garages[id] = nil
+end)
 
 AddEventHandler('jj:client:playerSpawned', CreateBlipsZones)
 

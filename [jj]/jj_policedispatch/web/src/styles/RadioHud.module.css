@@ -1,0 +1,90 @@
+.hudWrapper {
+  pointer-events: all;
+  -webkit-user-select: none;
+  user-select: none;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  display: flex;
+  box-shadow: none !important;
+  background: 0 0 !important;
+  border: none !important;
+  padding: 0 !important;
+}
+.hudWrapperExpanded {
+  min-width: 190px;
+}
+.channelCard {
+  background-color: var(--mantine-color-dark-7);
+  border: 1px solid var(--mantine-color-dark-6);
+  border-radius: 6px;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 6px 10px;
+  display: flex;
+  box-shadow: 0 4px 8px #00000026;
+}
+.statusBadge {
+  letter-spacing: 0.5px;
+  font-weight: 800;
+}
+.memberCard {
+  backface-visibility: hidden;
+  background-color: #0a0a0aa6;
+  border: 1px solid #46464666;
+  border-radius: 5px;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  height: 26px;
+  padding: 0 8px;
+  transition:
+    background-color 0.15s,
+    border-color 0.15s,
+    transform 0.1s ease-in-out;
+  display: flex;
+  transform: translateZ(0);
+  box-shadow: 0 2px 4px #0000001a;
+}
+.memberCardTalking {
+  background-color: #0a0a0abf;
+  border: 1px solid #46464680;
+  transform: scale(1.01) translateZ(0);
+}
+.memberLeft {
+  flex: 1;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  display: flex;
+}
+.memberName {
+  letter-spacing: 0.6px;
+  color: var(--mantine-color-gray-4);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 11px;
+  font-weight: 500;
+  overflow: hidden;
+}
+.memberRight {
+  align-items: center;
+  gap: 4px;
+  display: flex;
+}
+.talkingIndicator {
+  align-items: center;
+  animation: 1.5s ease-in-out infinite pulse;
+  display: flex;
+}
+@keyframes pulse {
+  0% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.8;
+  }
+}

@@ -1,5 +1,5 @@
 AddStateBagChangeHandler('isLoggedIn', ('player:%s'):format(cache.serverId), function(_, _, value)
-    if not value then client.onLogout() end
+    if value then client.onLogin() else client.onLogout() end
 end)
 
 RegisterNetEvent('qbx_core:client:onGroupUpdate', function(groupName, groupGrade)
@@ -18,13 +18,12 @@ end)
 
 ---@diagnostic disable-next-line: duplicate-set-field
 function client.setPlayerStatus(values)
+    local playerState = LocalPlayer.state
     for name, value in pairs(values) do
-        -- compatibility for ESX style values
         if value > 100 or value < -100 then
             value = value * 0.0001
         end
 
-        local currentValue = client.player:get(name) or 0
-        client.player:setr(name, lib.math.clamp(currentValue + value, 0, 100))
+        playerState:set(name, lib.math.clamp(playerState[name] + value, 0, 100), true)
     end
 end

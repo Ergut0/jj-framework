@@ -105,7 +105,6 @@ local function TriggerEventHooks(event, payload)
         end
     end
 
-
 	if event == 'createItem' then
 		result.result = payload.metadata
 	end

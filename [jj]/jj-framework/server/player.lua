@@ -132,6 +132,20 @@ function JJInternal.CreatePlayer(src, identifier, row)
         return true
     end
 
+    -- Vuelve a leer el trabajo de la configuración, porque ha cambiado su nombre o sus grados
+    function self.refreshJob()
+        local newJob = JJ.Utils.BuildJob(job.name, job.grade)
+        if not newJob then
+            return false
+        end
+        newJob.onDuty = job.onDuty
+        local oldJob = job
+        job = newJob
+        sync('job', job)
+        TriggerEvent('jj:server:jobChanged', src, job, oldJob)
+        return true
+    end
+
     function self.setDuty(onDuty)
         job.onDuty = onDuty == true
         sync('job', job)
@@ -184,8 +198,8 @@ function JJInternal.CreatePlayer(src, identifier, row)
         }
     end
 
-    function self.notify(message)
-        JJ.Notify(src, message)
+    function self.notify(message, kind, duration)
+        JJ.Notify(src, message, kind, duration)
     end
 
     function self.kick(reason)
@@ -241,8 +255,56 @@ function JJ.GetPlayers()
     return sources
 end
 
-function JJ.Notify(src, message)
-    TriggerClientEvent('jj:client:notify', src, message)
+-- Trabajos creados en marcha por otros recursos. Los de config.lua no se pueden cambiar
+
+local dynamicJobs = {}
+
+-- job: { label = 'Nombre', grades = { [0] = { label = 'Grado', salary = 0, isBoss = false } } }
+function JJ.RegisterJob(name, job)
+    if type(name) ~= 'string' or type(job) ~= 'table' or type(job.grades) ~= 'table' then
+        return false
+    end
+    if Config.Jobs[name] and not dynamicJobs[name] then
+        return false
+    end
+
+    -- Al pasar por un export, las claves pueden llegar como texto
+    local grades = {}
+    for grade, data in pairs(job.grades) do
+        local id = math.tointeger(tonumber(grade))
+        if id then
+            grades[id] = data
+        end
+    end
+
+    dynamicJobs[name] = true
+    Config.Jobs[name] = { label = job.label, grades = grades }
+
+    for _, player in pairs(players) do
+        if player.getJob().name == name then
+            player.refreshJob()
+        end
+    end
+    return true
+end
+
+-- Quien tuviera ese trabajo pasa al trabajo por defecto
+function JJ.RemoveJob(name)
+    if not dynamicJobs[name] then
+        return false
+    end
+    for _, player in pairs(players) do
+        if player.getJob().name == name then
+            player.setJob(Config.DefaultJob, 0)
+        end
+    end
+    dynamicJobs[name] = nil
+    Config.Jobs[name] = nil
+    return true
+end
+
+function JJ.Notify(src, message, kind, duration)
+    TriggerClientEvent('jj:client:notify', src, message, kind, duration)
 end
 
 function JJ.IsAdmin(src)

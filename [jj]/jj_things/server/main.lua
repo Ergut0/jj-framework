@@ -321,8 +321,7 @@ RegisterNetEvent('consumables:server:updateDrunk', function(drunk)
 end)
 
 lib.callback.register('jj_things:callback:getPlayerCP', function(source)
-    local player = JJ.GetPlayer(source)
-    return player and player.getMetadata('cp') or 0
+    return JJ.GetCP(source)
 end)
 
 -- Resolución de pantalla
@@ -340,7 +339,7 @@ end)
 
 CreateThread(function()
     for jobName in pairs(Config.BossStashes) do
-        local job = JJ.Config.Jobs[jobName]
+        local job = JJ.GetJobs()[jobName]
         if job then
             local minGrade
             for grade, data in pairs(job.grades) do
@@ -355,7 +354,7 @@ CreateThread(function()
     end
 
     for jobName in pairs(Config.JobStashes) do
-        local job = JJ.Config.Jobs[jobName]
+        local job = JJ.GetJobs()[jobName]
         if job then
             exports.ox_inventory:RegisterStash(jobName .. '-boss', 'Almacén de ' .. job.label, 100, 200000, false, { [jobName] = 0 })
         end

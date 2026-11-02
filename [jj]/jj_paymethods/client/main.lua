@@ -1,6 +1,8 @@
 local paySelected = nil 
 
-local PayMethods = function(amountMoney, instantRemove)
+-- Muestra el diálogo y devuelve el método elegido, o nil si se cancela.
+-- Con coins se ofrece también pagar con CP
+local SelectMethod = function(amountMoney, allowCompany, coins)
 
     local options = {
         {label = "Banco", value = "bank"},
@@ -9,21 +11,33 @@ local PayMethods = function(amountMoney, instantRemove)
 
     local PlayerData = GetPlayerData()
 
-    if PlayerData.job and (PlayerData.job.name == 'police' or PlayerData.job.name == 'sheriff') and PlayerData.job.onDuty then
+    if allowCompany ~= false and PlayerData.job and (PlayerData.job.name == 'police' or PlayerData.job.name == 'sheriff') and PlayerData.job.onDuty then
         table.insert(options, {label = "Tarjeta de empresa", value = "company"})
     end
 
-    local input = lib.inputDialog('Método de pago $' .. amountMoney, {
+    local title = 'Método de pago $' .. amountMoney
+    if coins and coins > 0 then
+        local balance = tonumber(LocalPlayer.state.cp) or 0
+        table.insert(options, {label = ('CP: %d (tienes %d)'):format(coins, balance), value = "cp"})
+        title = ('%s o %d CP'):format(title, coins)
+    end
+
+    local input = lib.inputDialog(title, {
         { icon = "fa-solid fa-dollar-sign", type = 'select', label = 'Tipo', options = options, description = "Selecciona el método de pago", required = true },
     })
 
-    if input then
-        paySelected = input[1]
-        if input[1] and instantRemove then
+    return input and input[1] or nil
+end
+
+local PayMethods = function(amountMoney, instantRemove)
+    local method = SelectMethod(amountMoney)
+
+    if method then
+        paySelected = method
+        if instantRemove then
             return lib.callback.await('jj_paymethods:payMethod', false, amountMoney, paySelected)
-        elseif not instantRemove then 
-            return true 
         end
+        return true
     end
 end
 
@@ -42,6 +56,7 @@ local CheckMoney = function(amountMoney)
     end
 end
 
+exports('SelectMethod', SelectMethod)
 exports('PayMethods', PayMethods)
 exports('PayLater', PayLater)
 exports('CheckMoney', CheckMoney)

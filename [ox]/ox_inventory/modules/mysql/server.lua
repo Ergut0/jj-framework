@@ -15,16 +15,90 @@ local Query = {
 }
 
 Citizen.CreateThreadNow(function()
-    local success = pcall(MySQL.scalar.await, 'SELECT 1 FROM ox_inventory')
+    local playerTable, playerColumn, vehicleTable, vehicleColumn
+
+    if shared.framework == 'ox' then
+        playerTable = 'character_inventory'
+        playerColumn = 'charid'
+        vehicleTable = 'vehicles'
+        vehicleColumn = 'id'
+    elseif shared.framework == 'esx' then
+        playerTable = 'users'
+        playerColumn = 'identifier'
+        vehicleTable = 'owned_vehicles'
+        vehicleColumn = 'plate'
+    elseif shared.framework == 'nd' then
+        playerTable = 'nd_characters'
+        playerColumn = 'charid'
+        vehicleTable = 'nd_vehicles'
+        vehicleColumn = 'id'
+    elseif shared.framework == 'qbx' then
+        playerTable = 'players'
+        playerColumn = 'citizenid'
+        vehicleTable = 'player_vehicles'
+        vehicleColumn = 'id'
+     elseif shared.framework == 'qb' then
+        playerTable = 'players'
+        playerColumn = 'citizenid'
+        vehicleTable = 'player_vehicles'
+        vehicleColumn = 'plate'
+    elseif shared.framework == 'jj' then
+        playerTable = 'jj_players'
+        playerColumn = 'identifier'
+        vehicleTable = 'jj_vehicles'
+        vehicleColumn = 'plate'
+    else
+        return
+    end
+
+    for k, v in pairs(Query) do
+        Query[k] = v:gsub('{user_table}', playerTable):gsub('{user_column}', playerColumn):gsub('{vehicle_table}',
+            vehicleTable):gsub('{vehicle_column}', vehicleColumn)
+    end
+
+    Wait(0)
+
+    local success, result = pcall(MySQL.scalar.await, 'SELECT 1 FROM ox_inventory')
 
     if not success then
-        return MySQL.query([[CREATE TABLE `ox_inventory` (
+        MySQL.query([[CREATE TABLE `ox_inventory` (
 			`owner` varchar(60) DEFAULT NULL,
 			`name` varchar(100) NOT NULL,
 			`data` longtext DEFAULT NULL,
 			`lastupdated` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
 			UNIQUE KEY `owner` (`owner`,`name`)
 		)]])
+    else
+
+    end
+
+    result = MySQL.query.await(('SHOW COLUMNS FROM `%s`'):format(vehicleTable))
+
+    if result then
+        local glovebox, trunk
+
+        for i = 1, #result do
+            local column = result[i]
+            if column.Field == 'glovebox' then
+                glovebox = true
+            elseif column.Field == 'trunk' then
+                trunk = true
+            end
+        end
+
+        if not glovebox then
+            MySQL.query(('ALTER TABLE `%s` ADD COLUMN `glovebox` LONGTEXT NULL'):format(vehicleTable))
+        end
+
+        if not trunk then
+            MySQL.query(('ALTER TABLE `%s` ADD COLUMN `trunk` LONGTEXT NULL'):format(vehicleTable))
+        end
+    end
+
+    success, result = pcall(MySQL.scalar.await, ('SELECT inventory FROM `%s`'):format(playerTable))
+
+    if not success then
+        MySQL.query(('ALTER TABLE `%s` ADD COLUMN `inventory` LONGTEXT NULL'):format(playerTable))
     end
 
     local clearStashes = GetConvar('inventory:clearstashes', '6 MONTH')
@@ -34,47 +108,7 @@ Citizen.CreateThreadNow(function()
     end
 end)
 
-local db = {}
-
----@param schema { [string]: { table: string, col: string }}
-function db.setup(schema)
-    for k, v in pairs(Query) do
-        Query[k] = v:gsub('{user_table}', schema.user.table):gsub('{user_column}', schema.user.col):gsub('{vehicle_table}',
-            schema.vehicle.table):gsub('{vehicle_column}', schema.vehicle.col)
-    end
-
-    Wait(0)
-
-    local result = MySQL.query.await(('SHOW COLUMNS FROM `%s`'):format(schema.vehicle.table))
-
-    if result then
-        local glovebox, trunk
-
-        for i = 1, #result do
-            local column = result[i]
-
-            if column.Field == 'glovebox' then
-                glovebox = true
-            elseif column.Field == 'trunk' then
-                trunk = true
-            end
-        end
-
-        if not glovebox then
-            MySQL.query(('ALTER TABLE `%s` ADD COLUMN `glovebox` LONGTEXT NULL'):format(schema.vehicle.table))
-        end
-
-        if not trunk then
-            MySQL.query(('ALTER TABLE `%s` ADD COLUMN `trunk` LONGTEXT NULL'):format(schema.vehicle.table))
-        end
-    end
-
-    local success = pcall(MySQL.scalar.await, ('SELECT inventory FROM `%s`'):format(schema.user.table))
-
-    if not success then
-        MySQL.query(('ALTER TABLE `%s` ADD COLUMN `inventory` LONGTEXT NULL'):format(schema.user.table))
-    end
-end
+db = {}
 
 function db.loadPlayer(identifier)
     local inventory = MySQL.prepare.await(Query.SELECT_PLAYER, { identifier }) --[[@as string?]]
@@ -91,6 +125,14 @@ end
 
 function db.loadStash(owner, name)
     return MySQL.prepare.await(Query.SELECT_STASH, { owner and tostring(owner) or '', name })
+end
+
+function db.migrateBackpack(name)
+    local row = MySQL.scalar.await('SELECT data FROM ox_inventory WHERE name = ? ORDER BY lastupdated DESC LIMIT 1', { name })
+    if row then
+        MySQL.prepare(Query.UPSERT_STASH, { row, '', name })
+    end
+    return row
 end
 
 function db.saveGlovebox(id, inventory)

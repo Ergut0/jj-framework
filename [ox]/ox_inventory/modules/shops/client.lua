@@ -24,8 +24,50 @@ for shopType, shopData in pairs(lib.load('data.shops') or {} --[[@as table<strin
 	local blip = shop.blip
 
 	if blip then
-		blip.name = ('ox_shop_%s'):format(shopType)
-		AddTextEntry(blip.name, shop.name or shopType)
+		blip.name = blip.name or shop.name or shopType
+	end
+end
+
+-- Un NPC creado antes de que cargue el interior queda fuera de la sala y no se dibuja al entrar
+local function settleShopPed(entity, point)
+	local coords = point.coords
+	local timeout = GetGameTimer() + 5000
+
+	while not HasCollisionLoadedAroundEntity(entity) and GetGameTimer() < timeout and point.entity == entity do
+		RequestCollisionAtCoord(coords.x, coords.y, coords.z)
+		Wait(100)
+	end
+
+	if point.entity ~= entity or not HasCollisionLoadedAroundEntity(entity) then return end
+
+	local interior = GetInteriorAtCoords(coords.x, coords.y, coords.z)
+
+	if interior ~= 0 then
+		LoadInterior(interior)
+
+		while not IsInteriorReady(interior) and GetGameTimer() < timeout and point.entity == entity do
+			Wait(100)
+		end
+	end
+
+	if point.entity ~= entity then return end
+
+	-- Sin congelar, el juego lo coloca en la sala que le corresponde
+	FreezeEntityPosition(entity, false)
+	Wait(200)
+
+	if point.entity ~= entity then return end
+
+	SetEntityCoordsNoOffset(entity, coords.x, coords.y, coords.z, false, false, false)
+	SetEntityHeading(entity, point.heading or 0.0)
+	FreezeEntityPosition(entity, true)
+
+	while interior ~= 0 and point.entity == entity do
+		if GetInteriorFromEntity(cache.ped) == interior and GetInteriorFromEntity(entity) ~= interior then
+			ForceRoomForEntity(entity, interior, GetRoomKeyFromEntity(cache.ped))
+		end
+
+		Wait(1000)
 	end
 end
 
@@ -59,6 +101,7 @@ local function onEnterShop(point)
 		})
 
 		point.entity = entity
+		CreateThread(function() settleShopPed(entity, point) end)
 	end
 end
 
@@ -207,6 +250,33 @@ local function refreshShops()
 		::skipLoop::
 	end
 end
+
+-- Para comprobar en el juego los NPC de las tiendas cercanas: el resultado sale en F8
+RegisterCommand('tiendadebug', function()
+	local playerCoords = GetEntityCoords(cache.ped)
+	local found = 0
+
+	for i = 1, #shops do
+		local shop = shops[i]
+
+		if shop.ped and #(playerCoords - shop.coords) < 100.0 then
+			found += 1
+
+			local entity = shop.entity
+			local exists = entity and DoesEntityExist(entity)
+			print(('[tiendadebug] %s #%s %s | distancia %.1f | existe %s | visible %s | movido %.1f | interior NPC %s, punto %s, jugador %s'):format(
+				shop.type, shop.invId, shop.ped, #(playerCoords - shop.coords), tostring(exists),
+				tostring(exists and IsEntityVisible(entity)),
+				exists and #(GetEntityCoords(entity) - shop.coords) or -1.0,
+				exists and GetInteriorFromEntity(entity) or 0,
+				GetInteriorAtCoords(shop.coords.x, shop.coords.y, shop.coords.z),
+				GetInteriorFromEntity(cache.ped)
+			))
+		end
+	end
+
+	print(('[tiendadebug] target %s | puntos %d | cerca %d'):format(tostring(shared.target), #shops, found))
+end, false)
 
 return {
 	refreshShops = refreshShops,

@@ -1,8 +1,5 @@
 if not lib then return end
 
--- Module is deprecated and provided for compatibility
--- All functions are now part of with ox_lib
-
 exports('Keyboard', lib.inputDialog)
 
 exports('Progress', function(options, completed)

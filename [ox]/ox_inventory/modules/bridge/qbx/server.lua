@@ -1,14 +1,6 @@
 assert(lib.checkDependency('qbx_core', '1.18.1'), 'qbx_core v1.18.1 or higher is required')
 assert(lib.checkDependency('qbx_vehicles', '1.2.0'), 'qbx_vehicles v1.2.0 or higher is required')
-
 local Inventory = require 'modules.inventory.server'
-local db = require 'modules.mysql.server'
-
-db.setup({
-	user = { table = 'players', col = 'citizenid' },
-	vehicle = { table = 'player_vehicles', col = 'id' },
-})
-
 local QBX = exports.qbx_core
 
 AddEventHandler('qbx_core:server:playerLoggedOut', server.playerDropped)
@@ -112,4 +104,62 @@ end
 ---@diagnostic disable-next-line: duplicate-set-field
 function server.getOwnedVehicleId(entityId)
     return Entity(entityId).state.vehicleid or exports.qbx_vehicles:GetVehicleIdByPlate(GetVehicleNumberPlateText(entityId))
+end
+
+local function normaliseCurrency(currency)
+    if server.normaliseCurrency then
+        return server.normaliseCurrency(currency)
+    end
+
+    currency = type(currency) == 'string' and currency:lower() or 'money'
+    if currency == 'cash' then currency = 'money' end
+    return currency
+end
+
+---@diagnostic disable-next-line: duplicate-set-field
+function server.getCurrencyBalance(inv, currency)
+    local normalised = normaliseCurrency(currency)
+    local player = QBX:GetPlayer(inv.id)
+
+    if player then
+        if normalised == 'money' then
+            return player.PlayerData.money.cash or 0
+        elseif normalised == 'bank' then
+            return player.PlayerData.money.bank or 0
+        end
+    end
+
+    return Inventory.GetItemCount(inv, normalised)
+end
+
+---@diagnostic disable-next-line: duplicate-set-field
+function server.removeCurrency(inv, currency, amount, context)
+    local normalised = normaliseCurrency(currency)
+    local player = QBX:GetPlayer(inv.id)
+
+    if player then
+        local reason = context or 'ox_inventory:transaction'
+
+        if server.loglevel > 0 then
+            local preCash = player.PlayerData.money.cash
+            local preBank = player.PlayerData.money.bank
+        end
+
+        if normalised == 'money' then
+            player.Functions.RemoveMoney('cash', amount, reason)
+            if server.loglevel > 0 then
+                local postCash = player.PlayerData.money.cash
+            end
+            return true
+        elseif normalised == 'bank' then
+            player.Functions.RemoveMoney('bank', amount, reason)
+            Inventory.SetItem(inv, 'bank', player.PlayerData.money.bank)
+            if server.loglevel > 0 then
+                local postBank = player.PlayerData.money.bank
+            end
+            return true
+        end
+	end
+
+	return Inventory.RemoveItem(inv, normalised, amount)
 end

@@ -21,21 +21,53 @@ function OpenPersonalMenu()
             { icon = "fas fa-film",    label = "Rockstar Editor",          args = { action = 'editor' } },
             { icon = "fas fa-gun",     label = "Personalización de Armas", args = { action = 'holster' } },
         }
-    }, function(selected, _, args)
-        if selected == 1 then
+    }, function(_, _, args)
+        local action = args and args.action
+        if action == 'infopersonal' then
             OpenInfoPersonalMenu()
-        elseif selected == 2 then
+        elseif action == 'interactions' then
             OpenInteractionsMenu()
-        elseif selected == 3 then
+        elseif action == 'menuaction' then
             OpenDeactivateMenu()
-        elseif selected == 4 then
+        elseif action == 'editor' then
             OpenRockstarEditorMenu()
-        elseif selected == 5 then
+        elseif action == 'holster' then
             ExecuteCommand("holster")
         end
     end)
     lib.showMenu('personal_menu')
 end
+
+--[[function OpenGangMenu()
+    local gang = GetGang()
+    if not gang then
+        Notify("No estás en ninguna banda", "error")
+        return
+    end
+
+    lib.registerMenu({
+        id = 'gang_menu',
+        title = 'MI BANDA',
+        position = 'bottom-right',
+        options = {
+            { icon = "fas fa-skull-crossbones", label = "Banda: " .. gang.label },
+            { icon = "fas fa-id-badge",         label = "Rango: " .. (gang.rankName or "Sin rango") },
+            { icon = "fas fa-users",            label = "Ver mi banda",     description = "Rango y salir de la banda", args = { action = 'mine' } },
+            { icon = "fas fa-spray-can",        label = "Pintar grafiti",   description = "Donde apuntas", args = { action = 'graffiti' } },
+        },
+        onClose = function()
+            OpenPersonalMenu()
+        end
+    }, function(_, _, args)
+        local action = args and args.action
+        if action == 'mine' then
+            ExecuteCommand("banda")
+        elseif action == 'graffiti' then
+            ExecuteCommand("graffiti")
+        end
+    end)
+    lib.showMenu('gang_menu')
+end]]--
 
 function OpenInteractionsMenu()
     lib.registerMenu({

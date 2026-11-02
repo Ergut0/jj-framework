@@ -89,5 +89,14 @@
   "crafting_bench": "クラフト台",
   "open_crafting_bench": "クラフト台を開く",
   "not_enough_durability": "%s の耐久度が足りません",
-  "storage": "ストレージ"
+  "storage": "ストレージ",
+  "crafting_pack_disabled": "作業台の収納は無効です。",
+  "crafting_pack_confirm_title": "作業台を収納しますか？",
+  "crafting_pack_confirm_items": "作業台の保管庫にアイテムがあります。収納すると中身が近くに落とされます。続行しますか？",
+  "storage_pack_disabled": "保管庫の収納は無効です。",
+  "storage_in_use": "この保管庫は現在使用中です。",
+  "storage_pack_confirm_title": "保管庫を収納しますか？",
+  "storage_pack_confirm_items": "保管庫にアイテムがあります。収納すると中身が近くに落とされます。続行しますか？",
+  "storage_contents_dropped": "保管庫の中身が近くに落とされました。",
+  "currency_symbol": "¥"
 }

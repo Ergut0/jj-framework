@@ -7,5 +7,14 @@ node_modules/
 # Pesa más de 100 MB, el límite de GitHub
 /\[jj\]/jj_loadingscreen/web/assets/audio.mp3
 
+# Script de pago con licencia: tampoco se puede publicar. Sus claves van en server/apiKeys.lua
+/\[phone\]/
+/\[standalone\]/fd_banking/
+
 # Configuración local
 /.claude/
+
+# Copia aparte del repositorio y archivos comprimidos (copias de seguridad, pesan demasiado)
+/jj-framework/
+*.rar
+*.zip

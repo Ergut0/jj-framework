@@ -3,10 +3,13 @@ if not lib.checkDependency('jj-framework', '0.2.0', true) then return end
 local Inventory = require 'modules.inventory.server'
 local db = require 'modules.mysql.server'
 
-db.setup({
-    user = { table = 'jj_players', col = 'identifier' },
-    vehicle = { table = 'jj_vehicles', col = 'plate' },
-})
+-- Algunas versiones de ox_inventory eligen las tablas en modules/mysql/server.lua y no tienen db.setup
+if db.setup then
+    db.setup({
+        user = { table = 'jj_players', col = 'identifier' },
+        vehicle = { table = 'jj_vehicles', col = 'plate' },
+    })
+end
 
 local JJ = exports['jj-framework']:GetCoreObject()
 
@@ -151,6 +154,34 @@ function server.buyLicense(inv, license)
     player.setMetadata('licenses', licenses)
 
     return true, 'have_purchased'
+end
+
+local getCurrencyBalance = server.getCurrencyBalance
+local removeCurrency = server.removeCurrency
+
+-- El banco no es un objeto del inventario: su saldo solo está en el framework
+local function isBank(currency)
+    return server.normaliseCurrency and server.normaliseCurrency(currency) == 'bank'
+end
+
+if getCurrencyBalance then
+    ---@diagnostic disable-next-line: duplicate-set-field
+    function server.getCurrencyBalance(inv, currency)
+        if not isBank(currency) then return getCurrencyBalance(inv, currency) end
+
+        local player = JJ.GetPlayer(type(inv) == 'table' and inv.id or inv)
+        return player and player.getMoney('bank') or 0
+    end
+end
+
+if removeCurrency then
+    ---@diagnostic disable-next-line: duplicate-set-field
+    function server.removeCurrency(inv, currency, amount, context)
+        if not isBank(currency) then return removeCurrency(inv, currency, amount, context) end
+
+        local player = JJ.GetPlayer(type(inv) == 'table' and inv.id or inv)
+        return player and player.removeMoney('bank', amount, context or 'ox_inventory') or false
+    end
 end
 
 ---@diagnostic disable-next-line: duplicate-set-field

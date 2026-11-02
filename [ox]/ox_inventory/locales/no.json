@@ -88,6 +88,20 @@
     "crafting_item": "Lager %s",
     "crafting_bench": "Lagebenk",
     "open_crafting_bench": "Åpne lagebenk",
-    "not_enough_durability": "%s har ikke nok holdbarhet"
-  }
-  
+    "not_enough_durability": "%s har ikke nok holdbarhet",
+    "localeString": "no-NO",
+    "ui_rename": "Gi nytt navn",
+    "ui_rename_label": "Navn",
+    "ui_confirm": "Bekreft",
+    "ui_cancel": "Avbryt",
+    "crafting_blueprint_durability": "Blueprint durability is too low for that quantity",
+    "crafting_pack_disabled": "Pakking av arbeidsbenker er deaktivert.",
+    "crafting_pack_confirm_title": "Pakke arbeidsbenken?",
+    "crafting_pack_confirm_items": "Arbeidsbenkens lager inneholder gjenstander. Ved pakking slippes innholdet i nærheten. Fortsette?",
+    "storage_pack_disabled": "Pakking av lagerenheter er deaktivert.",
+    "storage_in_use": "Dette lageret er i bruk.",
+    "storage_pack_confirm_title": "Pakke lageret?",
+    "storage_pack_confirm_items": "Lageret inneholder gjenstander. Ved pakking slippes innholdet i nærheten. Fortsette?",
+    "storage_contents_dropped": "Lagerinnholdet ble sluppet i nærheten.",
+    "currency_symbol": "kr"
+}

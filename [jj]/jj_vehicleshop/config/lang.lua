@@ -1,0 +1,31 @@
+Lang = {
+    ['time_left'] = "Tiempo restante: ",
+    ['not_enough_money'] = "Dinero insuficiente",
+    ['empty_category'] = "Esta categoría está vacía",
+    ['open_prompt'] = "[E] - Abrir el concesionario",
+    ['open_target'] = "Abrir el concesionario",
+    ['no_access'] = "No tienes acceso a este concesionario",
+    ['too_far'] = "Estás demasiado lejos del vendedor",
+    ['not_available'] = "Este vehículo no está disponible",
+    ['buy_failed'] = "No se ha podido completar la compra",
+    ['payment_unavailable'] = "El sistema de pago no está disponible",
+    ['bought'] = "Has comprado el vehículo. Matrícula: %s",
+    ['spawn_failed'] = "Tu vehículo está en el garaje. Matrícula: %s",
+    ['test_failed'] = "No se puede probar este vehículo ahora",
+    ['rotate_hint'] = "Usa las flechas para poder rotar el vehículo",
+    ['register_no_vehicle'] = "Tienes que estar dentro de un vehículo",
+    ['registered'] = "Vehículo registrado a tu nombre. Matrícula: %s",
+    ['no_permission'] = "No tienes permiso para usar este comando",
+}
+
+UILang = {
+    ['acceleration'] = "Aceleración",
+    ['speed'] = "Velocidad",
+    ['handling'] = "Conducción",
+    ['braking'] = "Frenado",
+    ['seats'] = "Asientos",
+    ['buy_button'] = "Comprar",
+    ['test_button'] = "Probar",
+    ['search_category'] = "Buscar categoría",
+    ['search_vehicle'] = "Buscar vehículo",
+}

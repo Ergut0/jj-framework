@@ -8,7 +8,6 @@ TriggerEvent('ox_inventory:itemList', ItemList)
 
 Items.containers = require 'modules.items.containers'
 
--- Possible metadata when creating garbage
 local trash = {
 	{description = 'A discarded burger carton.', weight = 50, image = 'trash_burger'},
 	{description = 'An empty soda can.', weight = 20, image = 'trash_can'},
@@ -42,7 +41,6 @@ setmetatable(Items --[[@as table]], {
 ---@cast Items +fun(itemName: string): OxServerItem
 ---@cast Items +fun(): table<string, OxServerItem>
 
--- Support both names
 exports('Items', function(item) return getItem(nil, item) end)
 exports('ItemList', function(item) return getItem(nil, item) end)
 
@@ -77,7 +75,6 @@ CreateThread(function()
 				local file = {string.strtrim(LoadResourceFile(shared.resource, 'data/items.lua'))}
 				file[1] = file[1]:gsub('}$', '')
 
-				---@todo separate into functions for reusability, properly handle nil values
 				local itemFormat = [[
 
 	[%q] = {
@@ -95,7 +92,6 @@ CreateThread(function()
 						fileSize += 1
 
 						local itemStr = itemFormat:format(item.name, item.label, item.weight, item.stack, item.close, item.description and json.encode(item.description) or 'nil')
-						-- temporary solution for nil values
 						itemStr = itemStr:gsub('[%s]-[%w]+ = "?nil"?,?', '')
 						file[fileSize] = itemStr
 						ItemList[item.name] = item
@@ -111,6 +107,101 @@ CreateThread(function()
 
 			shared.info('Database contains', #items, 'items.')
 		end
+			Wait(500)
+
+	elseif shared.framework == 'qb' then
+		local QBCore = exports['qb-core']:GetCoreObject()
+		local items = QBCore.Shared.Items
+
+		if items and table.type(items) ~= 'empty' then
+			local dump = {}
+			local count = 0
+			local ignoreList = {
+				"weapon_",
+				"pistol_",
+				"pistol50_",
+				"revolver_",
+				"smg_",
+				"combatpdw_",
+				"shotgun_",
+				"rifle_",
+				"carbine_",
+				"gusenberg_",
+				"sniper_",
+				"snipermax_",
+				"tint_",
+				"_ammo"
+			}
+
+			local function checkIgnoredNames(name)
+				for i = 1, #ignoreList do
+					if string.find(name, ignoreList[i]) then
+						return true
+					end
+				end
+				return false
+			end
+
+			for k, item in pairs(items) do
+				if type(item) == 'table' then
+					if not item.name then item.name = k end
+
+					if not ItemList[item.name] and not checkIgnoredNames(item.name) then
+						item.close = item.shouldClose == nil and true or item.shouldClose
+						item.stack = not item.unique and true
+						item.description = item.description
+						item.weight = item.weight or 0
+						dump[k] = item
+						count += 1
+					end
+				end
+			end
+
+			if table.type(dump) ~= 'empty' then
+				local file = {string.strtrim(LoadResourceFile(shared.resource, 'data/items.lua'))}
+				file[1] = file[1]:gsub('}$', '')
+
+				local itemFormat = [[
+
+	[%q] = {
+		label = %q,
+		weight = %s,
+		stack = %s,
+		close = %s,
+		description = %q,
+		client = {
+			status = {
+				hunger = %s,
+				thirst = %s,
+				stress = %s
+			},
+			image = %q,
+		}
+	},
+]]
+
+				local fileSize = #file
+
+				for _, item in pairs(dump) do
+					if not ItemList[item.name] then
+						fileSize += 1
+
+						local itemStr = itemFormat:format(item.name, item.label, item.weight, item.stack, item.close, item.description or 'nil', item.hunger or 'nil', item.thirst or 'nil', item.stress or 'nil', item.image or 'nil')
+						itemStr = itemStr:gsub('[%s]-[%w]+ = "?nil"?,?', '')
+						itemStr = itemStr:gsub('[%s]-[%w]+ = %{[%s]+%},?', '')
+						itemStr = itemStr:gsub('[%s]-[%w]+ = %{[%s]+%},?', '')
+						file[fileSize] = itemStr
+						ItemList[item.name] = item
+					end
+				end
+
+				file[fileSize+1] = '}'
+
+				SaveResourceFile(shared.resource, 'data/items.lua', table.concat(file), -1)
+				shared.info(count, 'items have been copied from the QBCore.Shared.Items.')
+				shared.info('You should restart the resource to load the new items.')
+			end
+		end
 
 		Wait(500)
 	end
@@ -124,7 +215,7 @@ CreateThread(function()
 	end
 
 	shared.info(('Inventory has loaded %d items'):format(count))
-	collectgarbage('collect') -- clean up from initialisation
+	collectgarbage('collect')
 	shared.ready = true
 end)
 
@@ -165,7 +256,6 @@ local TriggerEventHooks = require 'modules.hooks.server'
 ---@param metadata any
 ---@param count number
 ---@return table, number
----Generates metadata for new items being created through AddItem, buyItem, etc.
 function Items.Metadata(inv, item, metadata, count)
 	if type(inv) ~= 'table' then inv = Inventory(inv) end
 	if not item.weapon then metadata = not metadata and {} or type(metadata) == 'string' and {type=metadata} or metadata end
@@ -175,9 +265,7 @@ function Items.Metadata(inv, item, metadata, count)
 
 	if item.weapon then
 		if type(metadata) ~= 'table' then metadata = {} end
-		if not metadata.durability then 
-			metadata = setItemDurability(item, metadata)
-		end
+		if not metadata.durability then metadata.durability = 100 end
 		if not metadata.ammo and item.ammoname then metadata.ammo = 0 end
 		if not metadata.components then metadata.components = {} end
 
@@ -249,7 +337,6 @@ end
 ---@param item OxServerItem
 ---@param name string
 ---@param ostime number
----Validate (and in some cases convert) item metadata when an inventory is being loaded.
 function Items.CheckMetadata(metadata, item, name, ostime)
 	if metadata.bag then
 		metadata.container = metadata.bag
@@ -302,7 +389,6 @@ function Items.CheckMetadata(metadata, item, name, ostime)
 	return metadata
 end
 
----Update item durability, and call `Inventory.RemoveItem` if it was removed from decay.
 ---@param inv OxInventory
 ---@param slot SlotWithItem
 ---@param item OxServerItem
@@ -338,7 +424,6 @@ function Items.UpdateDurability(inv, slot, item, value, ostime)
 end
 
 ---@deprecated
----Use the 'ox_inventory:usedItem' event or the 'usingItem' or 'buyItem' hooks
 local function Item(name, cb)
 	local item = ItemList[name]
 
@@ -346,28 +431,5 @@ local function Item(name, cb)
 		item.cb = cb
 	end
 end
-
------------------------------------------------------------------------------------------------
--- Serverside item functions
------------------------------------------------------------------------------------------------
-
--- Item('testburger', function(event, item, inventory, slot, data)
--- 	if event == 'usingItem' then
--- 		if Inventory.GetItem(inventory, item, inventory.items[slot].metadata, true) > 0 then
--- 			-- if we return false here, we can cancel item use
--- 			return {
--- 				inventory.label, event, 'external item use poggies'
--- 			}
--- 		end
-
--- 	elseif event == 'usedItem' then
--- 		print(('%s just ate a %s from slot %s'):format(inventory.label, item.label, slot))
-
--- 	elseif event == 'buying' then
--- 		print(data.id, data.coords, json.encode(data.items[slot], {indent=true}))
--- 	end
--- end)
-
------------------------------------------------------------------------------------------------
 
 return Items

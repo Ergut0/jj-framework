@@ -29,6 +29,14 @@ setr ox_target:defaultHotkey "LMENU"
 # 1 para abrir con clic izquierdo, 0 para clic derecho
 setr ox_target:leftClick 1
 
+## pma-voice
+setr voice_useNativeAudio true
+setr voice_useSendingRangeOnly true
+# jj_hud ya muestra la voz
+setr voice_enableUi 0
+# Por defecto es LMENU, la misma tecla que ox_target
+setr voice_defaultRadio "CAPITAL"
+
 ## Recursos: el orden importa
 
 # Base de FiveM (cfx-server-data). No añadas basic-gamemode: interfiere con la aparición
@@ -41,14 +49,16 @@ ensure rconlog
 # Dependencias
 ensure oxmysql
 ensure cfxlua-require
+setr game_enableDynamicDoorCreation "true"
 ensure ox_lib
+ensure pma-voice
 
 # Framework, interacción e inventario. ox_target debe arrancar antes que ox_inventory
 ensure jj-framework
 ensure ox_target
 ensure ox_inventory
 
-# Ropa y aspecto. Arranca antes que jj_multicharacter, que lo usa para mostrar a los personajes
+# Ropa y aspecto. Arranca antes que jj_personajes, que lo usa para mostrar a los personajes
 ensure illenium-appearance
 
 # Pantalla de carga
@@ -57,7 +67,34 @@ ensure jj_loadingscreen
 # Recursos de jj
 ensure jj_deathsystem
 ensure jj_garages
-ensure jj_multicharacter
+# Crea trabajos en marcha: arranca después de jj_garages y antes de fd_banking
+ensure jj_creatorjobs
+ensure jj_bizztablet
+ensure jj_pausemenu
+ensure jj_policedispatch
+ensure jj_policejob
+ensure jj_policetablet
+ensure jj_boosting
+# Minijuegos de pug-robberycreator: tienen que arrancar antes que él
+ensure ox_doorlock
+ensure t3_lockpick
+ensure bd-minigames
+ensure utk_hackdependency
+ensure utk_fingerprint
+ensure ultra-voltlab
+ensure boii_minigames
+ensure pd-safe
+ensure ps-ui
+ensure ran-minigames
+ensure bl_ui
+ensure pug-robberycreator
+ensure jj_tuneos
+ensure jj_vehicleshop
+ensure jj_gangs
+ensure jj_flags
+ensure jj_handling
+ensure jj_hud
+ensure jj_personajes
 ensure jj_paymethods
 ensure jj_smallresources
 ensure jj_things
@@ -65,10 +102,34 @@ ensure jj_personalmenu
 ensure jj_keysystem
 ensure jj_alquiler
 ensure jj_gym
+ensure jj_recoil
+ensure jj_tienda
+ensure jj_radio
+ensure jj_crafting
+ensure jj_queue
+# Token del bot de Discord para los roles de la cola. Con set y no setr, para que los jugadores no lo vean
+# set jj_queue_bot_token "pon_aqui_el_token_del_bot"
+# set jj_queue_webhook "https://discord.com/api/webhooks/..."
+# set jj_handling_webhook "https://discord.com/api/webhooks/..."
+# add_ace group.admin jj.superadmin allow
+ensure fivem-freecam
+ensure jj_entornozones
+ensure jj_radioilegal
+ensure jj_sustos
+ensure jj_crews
+ensure jj_racing
 ensure jj_announce
+ensure jj_discord
 ensure jj_admin
 # Sustituye al recurso chat de FiveM: no arranques los dos a la vez
 ensure jj_chat
+
+# Móvil. Arranca después de jj-framework, ox_inventory, pma-voice, jj_garages y jj_keysystem
+ensure lb-phone
+
+# Banco. fd_banking_app añade la aplicación al móvil: arranca después de lb-phone
+ensure fd_banking
+ensure fd_banking_app
 
 ## Permisos
 
@@ -112,7 +173,7 @@ setr inventory:dropweight 30000
 
 # Integrated support for qtarget/ox_target stashes, shops, etc
 # Note: qtarget is deprecated, a future update may drop support (ox_target only, or gated features)
-setr inventory:target false
+setr inventory:target 1
 
 # Jobs with access to police armoury, evidence lockers, etc
 setr inventory:police ["police", "sheriff"]

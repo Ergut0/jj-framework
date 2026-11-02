@@ -1,0 +1,17 @@
+export const BODY_PARTS = [
+  { name: 'RLEG',       point: 0.87,  width: 0.14  },
+  { name: 'RFOOT',      point: 0.01,  width: 0.05  },
+  { name: 'RLEG',       point: 0.05,  width: 0.14  },
+  { name: 'UPPER_BODY', point: 0.13,  width: 0.1  },
+  { name: 'RARM',       point: 0.24,  width: 0.15  },
+  { name: 'RHAND',      point: 0.31,  width: 0.14  },
+  { name: 'NECK',       point: 0.36,  width: 0.05  },
+  { name: 'HEAD',       point: 0.415, width: 0.12  },
+  { name: 'NECK',       point: 0.47,  width: 0.05  },
+  { name: 'LARM',       point: 0.578, width: 0.15  },
+  { name: 'LHAND',      point: 0.516, width: 0.14  },
+  { name: 'UPPER_BODY', point: 0.695,  width: 0.10  },
+  { name: 'LLEG',       point: 0.78,  width: 0.09  },
+  { name: 'LFOOT',      point: 0.815,  width: 0.05  },
+  { name: 'LLEG',       point: 0.97,  width: 0.10  },
+];

@@ -81,7 +81,7 @@ for type, data in pairs(lib.load('data.weapons') or {}) do
 
 		if type == 'Weapons' then
 			---@cast v OxWeapon
-			v.model = v.model or k -- actually weapon type or such? model for compatibility
+			v.model = v.model or k
 			v.hash = joaat(v.model)
 			v.stack = v.throwable and true or false
 			v.durability = v.durability or 0.05

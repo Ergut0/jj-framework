@@ -3,12 +3,6 @@ if not lib.checkDependency('ox_core', '0.21.3', true) then return end
 local Ox = require '@ox_core.lib.init' --[[@as OxServer]]
 
 local Inventory = require 'modules.inventory.server'
-local db = require 'modules.mysql.server'
-
-db.setup({
-	user = { table = 'character_inventory', col = 'charid' },
-	vehicle = { table = 'vehicles', col = 'id' },
-})
 
 AddEventHandler('ox:playerLogout', server.playerDropped)
 
@@ -41,7 +35,6 @@ function server.buyLicense(inv, license)
 
     if not player then return end
 
-
 	if player.getLicense(license.name) then
 		return false, 'already_have'
 	elseif Inventory.GetItemCount(inv, 'money') < license.price then
@@ -65,5 +58,5 @@ end
 ---@return number | string
 ---@diagnostic disable-next-line: duplicate-set-field
 function server.getOwnedVehicleId(entityId)
-    return Ox.GetVehicleFromEntity(entityId)?.id
+    return Ox.GetVehicle(entityId)?.id
 end

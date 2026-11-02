@@ -36,6 +36,7 @@ Config.Actions = {
     players = 'mod',
     tpWaypoint = 'mod',
     tpCoords = 'mod',
+    coords = 'mod',
     god = 'admin',
 
     -- Vehículos

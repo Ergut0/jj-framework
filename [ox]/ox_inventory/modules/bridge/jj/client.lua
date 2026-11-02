@@ -10,3 +10,8 @@ end)
 function client.setPlayerStatus(values)
     TriggerEvent('jj:client:statusRequested', values)
 end
+
+
+RegisterNUICallback('cachear', function()
+    ExecuteCommand('cachear')
+end)

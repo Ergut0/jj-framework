@@ -160,7 +160,7 @@ CreateThread(function()
         for src, player in JJInternal.EachPlayer() do
             local salary = player.getJob().salary
             if player.isSpawned() and salary > 0 and player.addMoney(Config.PaycheckAccount, salary, 'paycheck') then
-                JJ.Notify(src, JJ.T('paycheck', salary))
+                JJ.Notify(src, JJ.T('paycheck', salary), 'success')
             end
         end
     end

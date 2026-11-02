@@ -1,0 +1,260 @@
+.searchContainer {
+  width: 360px;
+  flex-shrink: 0;
+  height: 88.3vh;
+  padding: 16px;
+  overflow-y: auto;
+  border-right: 2px solid var(--border-color);
+}
+.title {
+  display: flex;
+  align-items: center;
+  color: var(--mantine-color-gray-1);
+}
+.searchInput {
+  flex: 1;
+}
+.agentCard {
+  width: 100%;
+  border-radius: 5px;
+  padding: 10px;
+  background-color: var(--secondary-color);
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+.agentCardAvatar {
+  width: 60px;
+  height: 60px;
+}
+.agentCard:hover {
+  background-color: #ffffff08;
+}
+.statsCard {
+  border-radius: 5px;
+  background-color: var(--primary-color);
+  border: 1px solid var(--border-color);
+}
+.billTitle {
+  width: 70%;
+}
+.payedBill {
+  border-left: 3px solid var(--mantine-color-green-6);
+}
+.unpaidBill {
+  border-left: 3px solid var(--mantine-color-red-6);
+}
+.scrollAreaSearch {
+  height: 75.5vh;
+}
+@media (min-width: 1921px) {
+  .searchContainer {
+    width: 400px;
+    height: 90.1vh;
+  }
+  .scrollAreaSearch {
+    height: 80.5vh;
+  }
+  .mapWrapper {
+    height: 90.1vh;
+  }
+}
+.mapWrapper {
+  height: 88.3vh;
+  min-width: 0;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.headerSection {
+  width: 100%;
+  padding: 6px;
+  border: 2px solid var(--border-color);
+  border-radius: 5px;
+  background-color: var(--secondary-color);
+}
+.mapCanvasContainer {
+  height: 43vh;
+  position: relative;
+  overflow: hidden;
+  background-color: #161c24;
+  -webkit-user-select: none;
+  user-select: none;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+.bottomSection {
+  flex: 1;
+  display: flex;
+  gap: 12px;
+  min-height: 0;
+}
+.bottomBox {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--secondary-color);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  overflow: hidden;
+  min-width: 0;
+}
+.boxHeader {
+  background-color: var(--primary-color);
+  border-bottom: 1px solid var(--border-color);
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.boxHeaderTitle {
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 0.8px;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.boxContent {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.radioItem {
+  background-color: var(--primary-color);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: background-color 0.15s ease;
+}
+.radioItem:hover {
+  background-color: var(--button-hover-bg);
+}
+.radioHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.radioTagBadge {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: #fff;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.radioTitle {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.radioTime {
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+.radioMsg {
+  font-size: 13px;
+  color: var(--text-primary);
+  word-break: break-word;
+  line-height: 1.35;
+}
+.dispatchItem {
+  background-color: var(--primary-color);
+  border: 1px solid var(--border-color);
+  border-left: 4px solid var(--mantine-color-blue-6);
+  border-radius: 6px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: background-color 0.15s ease;
+}
+.dispatchItemPanic {
+  border-left-color: var(--mantine-color-red-6) !important;
+  background-color: #ff000014 !important;
+}
+.dispatchItemAssigned {
+  border-left-color: #a855f7 !important;
+  background-color: #a855f714 !important;
+  border-color: #a855f74d !important;
+}
+.unitBadge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background-color: #a855f733;
+  color: #c084fc;
+  border: 1px solid rgba(168, 85, 247, 0.4);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.dispatchItem:hover {
+  background-color: var(--button-hover-bg);
+}
+.dispatchHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.dispatchTitle {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.dispatchZone {
+  font-size: 11px;
+  color: #3b82f6;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.dispatchText {
+  font-size: 12px;
+  color: var(--text-primary);
+  font-weight: 500;
+  word-break: break-word;
+}
+.dispatchMeta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+.emptyBoxText {
+  color: var(--text-secondary);
+  font-size: 13px;
+  text-align: center;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: 100%;
+  padding: 20px 0;
+}

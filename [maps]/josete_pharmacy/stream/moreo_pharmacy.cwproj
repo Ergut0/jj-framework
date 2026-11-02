@@ -1,0 +1,40 @@
+<CodeWalkerProject>
+  <Name>New CodeWalker Project</Name>
+  <Version value="1" />
+  <YmapFilenames>
+    <Item>hei_hw1_occl_00.ymap</Item>
+    <Item>moreo_pharmacy_milo.ymap</Item>
+    <Item>map1.ymap</Item>
+    <Item>hei_hw1_rd_strm_3.ymap</Item>
+  </YmapFilenames>
+  <YtypFilenames>
+    <Item>moreo_pharmacy.ytyp</Item>
+  </YtypFilenames>
+  <YbnFilenames>
+    <Item>hei_hw1_06_0.ybn</Item>
+    <Item>hi@hei_hw1_06_0.ybn</Item>
+    <Item>hi@hw1_06_0.ybn</Item>
+    <Item>hw1_06_0.ybn</Item>
+    <Item>moreo_pharmacy_col.ybn</Item>
+  </YbnFilenames>
+  <YndFilenames />
+  <YnvFilenames />
+  <TrainsFilenames />
+  <ScenarioFilenames />
+  <AudioRelFilenames />
+  <YdrFilenames>
+    <Item>hei_hw1_06_grnd_low2.ydr</Item>
+    <Item>hw1_06_emissive_d.ydr</Item>
+    <Item>hw1_06_pharmcy_01.ydr</Item>
+    <Item>moreo_pharmacy_banners.ydr</Item>
+    <Item>moreo_pharmacy_consultationdoor.ydr</Item>
+    <Item>moreo_pharmacy_lights.ydr</Item>
+    <Item>moreo_pharmacy_maindoor.ydr</Item>
+    <Item>moreo_pharmacy_reflect.ydr</Item>
+    <Item>moreo_pharmacy_shell.ydr</Item>
+    <Item>moreo_pharmacy_storagedoor.ydr</Item>
+  </YdrFilenames>
+  <YddFilenames />
+  <YftFilenames />
+  <YtdFilenames />
+</CodeWalkerProject>

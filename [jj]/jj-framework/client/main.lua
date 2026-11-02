@@ -13,7 +13,7 @@ function JJ.IsSpawned()
     return spawned
 end
 
--- Marca al jugador como aparecido. Con Config.Multicharacter lo llama jj_multicharacter
+-- Marca al jugador como aparecido. Con Config.Multicharacter lo llama jj_personajes
 function JJ.SetSpawned()
     if spawned then
         return
@@ -24,14 +24,53 @@ function JJ.SetSpawned()
     TriggerEvent('jj:client:playerSpawned')
 end
 
-function JJ.Notify(message)
-    BeginTextCommandThefeedPost('STRING')
-    AddTextComponentSubstringPlayerName(message)
-    EndTextCommandThefeedPostTicker(false, true)
+-- Avisos e interfaz de ox_lib. kind: inform, success, warning o error
+local NOTIFY_KINDS = { primary = 'inform', info = 'inform', warn = 'warning' }
+
+function JJ.Notify(message, kind, duration)
+    if type(message) == 'table' then
+        lib.notify(message)
+        return
+    end
+    lib.notify({ description = tostring(message), type = NOTIFY_KINDS[kind] or kind or 'inform', duration = duration })
 end
 
-RegisterNetEvent('jj:client:notify', function(message)
-    JJ.Notify(message)
+function JJ.ShowTextUI(text, options)
+    lib.showTextUI(text, options)
+end
+
+function JJ.HideTextUI()
+    lib.hideTextUI()
+end
+
+function JJ.IsTextUIOpen()
+    return lib.isTextUIOpen()
+end
+
+-- Devuelven lo mismo que ox_lib y esperan a que el jugador termine
+function JJ.ProgressBar(data)
+    return lib.progressBar(data)
+end
+
+function JJ.ProgressCircle(data)
+    return lib.progressCircle(data)
+end
+
+function JJ.AlertDialog(data)
+    return lib.alertDialog(data)
+end
+
+function JJ.InputDialog(heading, rows, options)
+    return lib.inputDialog(heading, rows, options)
+end
+
+function JJ.ShowContext(data)
+    lib.registerContext(data)
+    lib.showContext(data.id)
+end
+
+RegisterNetEvent('jj:client:notify', function(message, kind, duration)
+    JJ.Notify(message, kind, duration)
 end)
 
 RegisterNetEvent('jj:client:playerLoaded', function(data)
@@ -82,7 +121,7 @@ CreateThread(function()
     while Config.Death.enabled do
         Wait(1000)
         if spawned and IsEntityDead(PlayerPedId()) then
-            JJ.Notify(JJ.T('death_respawn', Config.Death.respawnTime))
+            JJ.Notify(JJ.T('death_respawn', Config.Death.respawnTime), 'error')
             Wait(Config.Death.respawnTime * 1000)
             respawnAfterDeath()
         end

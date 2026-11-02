@@ -1,6 +1,5 @@
 ## The following images were provided by [yaroph](https://forum.cfx.re/u/yaroph/) for free-use by ox_inventory.
-
-- All files prefixed with _ammo-_, \_at\_\_, and \_WEAPON\_\_.
+- All files prefixed with _ammo-_, _at\__, and _WEAPON\__.
 - advancedkit
 - armour
 - bandage

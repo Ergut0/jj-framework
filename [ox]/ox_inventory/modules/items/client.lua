@@ -9,7 +9,6 @@ local function sendDisplayMetadata(data)
 	})
 end
 
---- use array of single key value pairs to dictate order
 ---@param metadata string | table<string, string> | table<string, string>[]
 ---@param value? string
 local function displayMetadata(metadata, value)
@@ -84,9 +83,6 @@ local function Item(name, cb)
 end
 
 local ox_inventory = exports[shared.resource]
------------------------------------------------------------------------------------------------
--- Clientside item use functions
------------------------------------------------------------------------------------------------
 
 Item('bandage', function(data, slot)
 	local maxHealth = GetEntityMaxHealth(cache.ped)
@@ -166,27 +162,27 @@ Item('clothing', function(data, slot)
 				local texture = GetPedPropTextureIndex(cache.ped, metadata.prop)
 
 				if metadata.drawable == prop and metadata.texture == texture then
-					return ClearPedProp(cache.ped, metadata.prop)
+					ClearPedProp(cache.ped, metadata.prop)
+					TriggerEvent('ox_inventory:clothing:appearanceChanged')
+					return
 				end
 
-				-- { prop = 0, drawable = 2, texture = 1 } = grey beanie
 				SetPedPropIndex(cache.ped, metadata.prop, metadata.drawable, metadata.texture, false);
+				TriggerEvent('ox_inventory:clothing:appearanceChanged')
 			elseif metadata.component then
 				local drawable = GetPedDrawableVariation(cache.ped, metadata.component)
 				local texture = GetPedTextureVariation(cache.ped, metadata.component)
 
 				if metadata.drawable == drawable and metadata.texture == texture then
-					return -- item matches (setup defaults so we can strip?)
+					return
 				end
 
-				-- { component = 4, drawable = 4, texture = 1 } = jeans w/ belt
 				SetPedComponentVariation(cache.ped, metadata.component, metadata.drawable, metadata.texture, 0);
+				TriggerEvent('ox_inventory:clothing:appearanceChanged')
 			end
 		end
 	end)
 end)
-
------------------------------------------------------------------------------------------------
 
 exports('Items', function(item) return getItem(nil, item) end)
 exports('ItemList', function(item) return getItem(nil, item) end)

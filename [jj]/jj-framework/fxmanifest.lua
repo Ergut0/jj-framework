@@ -7,11 +7,13 @@ description 'Framework base para servidores de FiveM'
 version '0.4.0'
 
 dependencies {
+    'ox_lib',
     'oxmysql',
     'spawnmanager'
 }
 
 shared_scripts {
+    '@ox_lib/init.lua',
     'config.lua',
     'locales/es.lua',
     'shared/main.lua'
@@ -23,6 +25,7 @@ server_scripts {
     'server/player.lua',
     'server/callbacks.lua',
     'server/main.lua',
+    'server/cp.lua',
     'server/commands.lua'
 }
 

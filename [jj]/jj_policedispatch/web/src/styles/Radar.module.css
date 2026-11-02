@@ -1,0 +1,139 @@
+.container {
+  box-sizing: border-box;
+  background-color: #0c0c0cd9;
+  border: 1px solid #ffffff0d;
+  border-radius: 8px;
+  flex-direction: column;
+  min-width: 430px;
+  padding: 10px 12px;
+  display: flex;
+  box-shadow: 0 8px 20px #0000008c;
+}
+.panelsGroup {
+  justify-content: space-between;
+  align-items: stretch;
+  width: 100%;
+  display: flex;
+}
+.panel {
+  flex-direction: column;
+  flex: 1;
+  justify-content: space-between;
+  padding: 0 4px;
+  display: flex;
+}
+.panelHeader {
+  color: var(--mantine-color-green-2, #a855f7);
+  letter-spacing: 2px;
+  text-align: center;
+  font-size: 0.65rem;
+  font-weight: 800;
+}
+.headerDivider {
+  background-color: #a855f740;
+  width: 70%;
+  height: 1px;
+  margin-top: 3px;
+}
+.verticalDivider {
+  background-color: #ffffff0d;
+  align-self: stretch;
+  width: 1px;
+  margin: 0 6px;
+}
+.speedWrapper {
+  justify-content: center;
+  align-items: flex-end;
+  margin: 2px 0;
+  display: flex;
+}
+.speedDigits {
+  color: #fff;
+  letter-spacing: -1px;
+  text-align: right;
+  font-family: Manrope, sans-serif;
+  font-size: 2.1rem;
+  font-weight: 900;
+  line-height: 1;
+}
+.leadingDigits {
+  color: #ffffff40;
+}
+.speedUnit {
+  color: var(--mantine-color-green-2, #a855f7);
+  letter-spacing: 0.8px;
+  margin-bottom: 2px;
+  margin-left: 2px;
+  font-size: 0.6rem;
+  font-weight: 800;
+}
+.gridLabel {
+  color: #636363;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-size: 0.48rem;
+  font-weight: 800;
+}
+.gridValue {
+  color: #fff;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  margin-top: 1px;
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+.lockedGlow {
+  border: 1px solid #ef444466 !important;
+  box-shadow:
+    0 0 15px #ef444440,
+    0 8px 20px #0000008c !important;
+}
+.panelHeaderLocked {
+  color: #ef4444 !important;
+}
+.headerDividerLocked {
+  background-color: #ef444466 !important;
+}
+.speedUnitLocked {
+  color: #ef4444 !important;
+}
+.container2K {
+  border-radius: 10px !important;
+  min-width: 530px !important;
+  padding: 12px 16px !important;
+}
+.container2K .panel {
+  gap: 15px !important;
+  padding: 0 6px !important;
+}
+.container2K .panelHeader {
+  font-size: 0.8rem !important;
+}
+.container2K .headerDivider {
+  margin-top: 5px !important;
+}
+.container2K .verticalDivider {
+  margin: 0 10px !important;
+}
+.container2K .speedWrapper {
+  margin: 4px 0 !important;
+}
+.container2K .speedDigits {
+  font-size: 2.6rem !important;
+}
+.container2K .speedUnit {
+  margin-bottom: 3px !important;
+  margin-left: 3px !important;
+  font-size: 0.75rem !important;
+}
+.container2K .gridLabel {
+  font-size: 0.6rem !important;
+}
+.container2K .gridValue {
+  margin-top: 2px !important;
+  font-size: 0.85rem !important;
+}
+.cod9Plate {
+  color: #ef4444 !important;
+}

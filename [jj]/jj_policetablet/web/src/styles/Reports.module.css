@@ -1,0 +1,80 @@
+.searchSection {
+  border-right: 2px solid var(--border-color);
+  width: 360px;
+  height: 88.3vh;
+}
+.incidentCard {
+  width: 100%;
+  border-radius: 5px;
+  padding: 12px;
+  background-color: var(--secondary-color);
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+.incidentCard:hover {
+  background-color: #ffffff08;
+}
+.infoSectionHeader {
+  border-radius: 5px;
+  border: 2px solid var(--border-color);
+  background-color: var(--secondary-color);
+}
+.infoSectionTitle {
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: large;
+  border: none;
+  background: transparent;
+  padding: 0;
+}
+.infoSectionBox {
+  border-radius: 5px;
+  background-color: var(--secondary-color);
+  border: 1px solid var(--border-color);
+}
+.boxItem {
+  background-color: var(--primary-color);
+  border-radius: 5px;
+  border: 1px solid var(--border-color);
+}
+.boxItem:hover {
+  background-color: var(--mantine-color-dark-8);
+  cursor: pointer;
+}
+.billItem {
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  background-color: var(--primary-color);
+  gap: 15px;
+}
+.evidenceImageOpen {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  padding: 20px;
+  border-radius: 10px;
+}
+.scrollArea {
+  height: 72vh;
+  width: 100%;
+}
+.scrollAreaSearch {
+  height: 67.5vh;
+}
+@media (min-width: 1921px) {
+  .searchSection {
+    width: 400px;
+    height: 90.1vh;
+  }
+  .scrollArea {
+    height: 78vh;
+  }
+  .scrollAreaSearch {
+    height: 74.5vh;
+  }
+}

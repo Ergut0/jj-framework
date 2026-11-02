@@ -1,0 +1,28 @@
+-- https://docs.altv.mp/gta/articles/vehicle/models.html#compactos
+Config.Categories['compactos'] = {
+    {name = "blista", price = 3737, coins = 15},
+    {name = "kanjo", price = 7475, coins = 15},
+    {name = "brioso2", price = 2243, coins = 15},
+    {name = "brioso3", price = 2990, coins = 15},
+    {name = "brioso", price = 8970, coins = 15},
+    {name = "club", price = 6727, coins = 20},
+    {name = "dilettante", price = 4485, coins = 15},
+    {name = "issi2", price = 5233, coins = 15},
+    {name = "issi3", price = 2093, coins = 15},
+    {name = "panto", price = 2990, coins = 15},
+    {name = "prairie", price = 4485, coins = 15},
+    {name = "weevil", price = 2392, coins = 15},
+    {name = "asbo", price = 3737, coins = 15},
+    {name = "rhapsody", price = 6727, coins = 15},
+    
+    {name = "weevilup", price = 4500, coins = 15},
+    {name = "turtle", price = 8500, coins = 15},
+    {name = "seraph3", price = 7500, coins = 15},
+    {name = "kawaii", price = 17500, coins = 15},
+    {name = "issic", price = 4500, coins = 15},
+    {name = "cwagon", price = 7600, coins = 15},
+    {name = "clubgtr", price = 8500, coins = 15},
+    {name = "castella", price = 10200, coins = 15},
+    {name = "arias", price = 21000, coins = 15},
+    {name = "tolap2", price = 35000, coins = 15},
+}

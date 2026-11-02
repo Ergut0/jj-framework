@@ -6,26 +6,21 @@ function client.setPlayerData(key, value)
 	OnPlayerData(key, value)
 end
 
----Checks whether the player has a required group and rank
----@param group string | table<string, number | number[]>
----@return string? groupName
----@return number? groupRank
 function client.hasGroup(group)
 	if not PlayerData.loaded then return end
-
 	if type(group) == 'table' then
-		for name, requiredRank in pairs(group) do
+		for k, v in pairs(group) do
+			local name, rank
+			if type(k) == 'number' then
+				name = v
+				rank = nil
+			else
+				name = k
+				rank = v
+			end
 			local groupRank = PlayerData.groups[name]
-			if groupRank then
-				if type(requiredRank) == 'table' then
-					if lib.table.contains(requiredRank, groupRank) then
-						return name, groupRank
-					end
-				else
-					if groupRank >= (requiredRank or 0) then
-						return name, groupRank
-					end
-				end
+			if groupRank and groupRank >= (rank or 0) then
+				return name, groupRank
 			end
 		end
 	else
@@ -40,6 +35,19 @@ local Shops = require 'modules.shops.client'
 local Utils = require 'modules.utils.client'
 local Weapon = require 'modules.weapon.client'
 local Items = require 'modules.items.client'
+local Utility = require 'modules.utility.client'
+
+function client.onLogin()
+    if not PlayerData.loaded then return end
+
+    if Utility.enabled then
+        Citizen.CreateThread(function()
+            Citizen.Wait(2000)
+            Utility.refreshArmorFromInventory(PlayerData.inventory)
+            Utility.refreshBackpackFromInventory(PlayerData.inventory)
+        end)
+    end
+end
 
 function client.onLogout()
 	if not PlayerData.loaded then return end
@@ -54,12 +62,74 @@ function client.onLogout()
 			Utils.DeleteEntity(point.entity)
 		end
 
+		if point.entities then
+			for uid, entity in pairs(point.entities) do
+				if entity and DoesEntityExist(entity) then
+					Utils.DeleteEntity(entity)
+				end
+
+				if client.dropObjects then
+					client.dropObjects[uid] = nil
+				end
+			end
+
+			point.entities = nil
+		end
+
 		point:remove()
 	end
 
-    for _, v in pairs(Items --[[@as table]]) do
+	if client.dropObjects then
+		for uid, record in pairs(client.dropObjects) do
+			if record then
+				local entity = record.entity
+
+				if entity and DoesEntityExist(entity) then
+					Utils.DeleteEntity(entity)
+				elseif record.netId then
+					local netEntity = NetworkGetEntityFromNetworkId(record.netId)
+
+					if netEntity and DoesEntityExist(netEntity) then
+						Utils.DeleteEntity(netEntity)
+					end
+				end
+			end
+
+			client.dropObjects[uid] = nil
+		end
+	end
+
+	if client.dropObjectsByNetId then
+		for netId in pairs(client.dropObjectsByNetId) do
+			client.dropObjectsByNetId[netId] = nil
+		end
+	end
+
+	if client.dropTargetRecords then
+		for uniqueId, record in pairs(client.dropTargetRecords) do
+			if record and GetResourceState('ox_target') == 'started' then
+				if record.entity and record.optionName then
+					pcall(function()
+						exports.ox_target:removeLocalEntity(record.entity, record.optionName)
+					end)
+				end
+
+				if record.zoneId then
+					pcall(function()
+						exports.ox_target:removeZone(record.zoneId)
+					end)
+				end
+			end
+
+			client.dropTargetRecords[uniqueId] = nil
+		end
+	end
+
+	for _, v in pairs(Items --[[@as table]]) do
         v.count = 0
     end
+
+    Utility.clearArmor()
 
 	PlayerData.loaded = false
 	client.drops = nil

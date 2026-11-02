@@ -1,11 +1,4 @@
-CreateThread(function()
-    while not LocalPlayer.state['isLoggedIn'] do
-        Wait(100)
-    end
-
-    local cps = lib.callback.await('jj_things:callback:getPlayerCP', false)
-    Player(cache.serverId).state:set('cp', cps, true)
-end)
+-- El saldo de CP (LocalPlayer.state.cp) lo mantiene al día jj-framework
 
 
 local function useMaskGas()

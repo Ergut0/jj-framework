@@ -1,5 +1,13 @@
 local containers = {}
 
+---@class ItemContainerProperties
+---@field slots number
+---@field maxWeight number
+---@field whitelist? table<string, true> | string[]
+---@field blacklist? table<string, true> | string[]
+---@field ignoreContentWeight? boolean
+---@field addContentWeight? boolean
+
 local function arrayToSet(tbl)
 	local size = #tbl
 	local set = table.create(0, size)
@@ -11,10 +19,8 @@ local function arrayToSet(tbl)
 	return set
 end
 
----Registers items with itemName as containers (i.e. backpacks, wallets).
 ---@param itemName string
 ---@param properties ItemContainerProperties
----@todo Rework containers for flexibility, improved data structure; then export this method.
 local function setContainerProperties(itemName, properties)
 	local blacklist, whitelist = properties.blacklist, properties.whitelist
 
@@ -42,6 +48,7 @@ local function setContainerProperties(itemName, properties)
 		size = { properties.slots, properties.maxWeight },
 		blacklist = blacklist,
 		whitelist = whitelist,
+		ignoreContentWeight = properties.ignoreContentWeight == true or properties.addContentWeight == false,
 	}
 end
 
@@ -49,8 +56,8 @@ exports('setContainerProperties', setContainerProperties)
 
 setContainerProperties('paperbag', {
 	slots = 5,
-	maxWeight = 1000,
-	blacklist = { 'testburger' }
+	maxWeight = 100000,
+	ignoreContentWeight = true
 })
 
 setContainerProperties('pizzabox', {

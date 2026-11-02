@@ -2,7 +2,7 @@ Config = {}
 
 Config.Locale = 'es'
 
--- Con jj_multicharacter cada licencia tiene varios personajes y ese recurso se encarga de cargarlos y hacerlos aparecer.
+-- Con jj_personajes cada licencia tiene varios personajes y ese recurso se encarga de cargarlos y hacerlos aparecer.
 -- Sin él, ponlo en false: cada licencia tiene un personaje que se carga al conectar
 Config.Multicharacter = true
 
@@ -31,7 +31,8 @@ Config.Death = {
 Config.Accounts = {
     cash = { label = 'Efectivo', start = 500 },
     bank = { label = 'Banco', start = 2500 },
-    black = { label = 'Dinero negro', start = 0 }
+    black = { label = 'Dinero negro', start = 0 },
+    ethereum = { label = 'Ethereum', start = 0 }
 }
 
 -- Cuenta en la que se ingresa el salario
@@ -64,12 +65,4 @@ Config.Jobs = {
             [2] = { label = 'Jefe médico', salary = 750, isBoss = true }
         }
     },
-    mechanic = {
-        label = 'Mecánico',
-        grades = {
-            [0] = { label = 'Aprendiz', salary = 250 },
-            [1] = { label = 'Mecánico', salary = 400 },
-            [2] = { label = 'Jefe de taller', salary = 600, isBoss = true }
-        }
-    }
 }
